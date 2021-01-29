@@ -5,13 +5,55 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MouseKeyPlayback.Views"
         mc:Ignorable="d"
-        Title="CreateWaitWindow" Height="161.6" Width="247.2">
-    <Grid>
-        <Label Content="Enter the wait time:" HorizontalAlignment="Left" Margin="55,25,0,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
-        <TextBox x:Name="tbxWait" Height="21" Margin="55,51,0,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="72" Text="200"/>
-        <Button x:Name="btnOk" Content="OK" HorizontalAlignment="Left" Margin="64,0,0,23" VerticalAlignment="Bottom" Width="60" Click="BtnOk_Click"/>
-        <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Margin="132,0,0,23" VerticalAlignment="Bottom" Width="60" Click="BtnCancel_Click"/>
-        <Label Content="ms" HorizontalAlignment="Left" Margin="132,51,0,0" VerticalAlignment="Top"/>
+        Title="CreateWaitWindow" Height="261.6" Width="211.2">
+    <Grid Margin="0,0,0,3">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="52*"/>
+            <RowDefinition Height="79*"/>
+        </Grid.RowDefinitions>
+        <Label Content="Enter the wait time:" HorizontalAlignment="Left" Margin="50,2,0,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
+        <TextBox x:Name="tbxWait" Height="21" Margin="60,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="72" Text="200" Grid.RowSpan="2"/>
+        <Button x:Name="btnOk" Content="OK" HorizontalAlignment="Left" Margin="10,0,0,9" VerticalAlignment="Bottom" Width="60" Click="BtnOk_Click" Grid.Row="1"/>
+        <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Margin="133,0,0,9" VerticalAlignment="Bottom" Width="60" Click="BtnCancel_Click" Grid.Row="1"/>
+        <Label Content="ms" HorizontalAlignment="Left" Margin="132,33,0,0" VerticalAlignment="Top" Grid.RowSpan="2"/>
+        <Expander X:Name ="ExpanderD" Header="Expander" HorizontalAlignment="Left" Margin="56,7,0,33" Width="87" IsExpanded="True"  Grid.Row="1" Expanded="Expander_Expanded" >
+            <Expander.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleY="-0.235"/>
+                    <RotateTransform/>
+                    <TranslateTransform Y="-0.437"/>
+                </TransformGroup>
+            </Expander.RenderTransform>
+            <StackPanel Margin="10">
+
+                <TextBox x:Name ="RandomMin"  Text=""  Margin="5,5,0,5" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="51">
+                    <TextBox.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform AngleY="-0.198"/>
+                            <RotateTransform/>
+                            <TranslateTransform Y="-0.217"/>
+                        </TransformGroup>
+                    </TextBox.RenderTransform>
+                </TextBox>
+                <TextBox x:Name ="RandomMax"  Text=""  Margin="5,5,0,5" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="51">
+                    <TextBox.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform AngleY="-0.198"/>
+                            <RotateTransform/>
+                            <TranslateTransform Y="-0.217"/>
+                        </TransformGroup>
+                    </TextBox.RenderTransform>
+                </TextBox>
+
+
+
+
+            </StackPanel>
+
+        </Expander>
 
     </Grid>
 </Window>

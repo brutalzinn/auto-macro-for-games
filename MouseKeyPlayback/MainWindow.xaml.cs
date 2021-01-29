@@ -517,7 +517,7 @@ namespace MouseKeyPlayback
 				{
 					RedrawWindow(IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, RDW_INVALIDATE | RDW_ALLCHILDREN | RDW_UPDATENOW);
 					g.Dispose();
-					//ReleaseDC(desktop);
+					ReleaseDC(desktop);
 				}				
 			}
 			catch(Exception ex)

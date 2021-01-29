@@ -16,5 +16,7 @@ namespace MouseKeyPlayback
         public string ElementName { get; set; }
         public string Type { get; set; }
 		public int WaitMs { get; set; }
+        public int WaitMaxMs { get; set; }
+        public int WaitMinMs { get; set; }
     }
 }
