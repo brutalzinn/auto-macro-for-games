@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="App Recorder"
     Width="977.6"
-    Height="513.265"
+    Height="573.265"
     Closed="Window_Closed"
     Loaded="Window_Loaded"
     mc:Ignorable="d">
@@ -180,13 +180,13 @@
                         x:Name="listView"
                         Width="514"
                         Height="338"
-                        Margin="0,0,0.4,0"
+                        Margin="0,0,0,0"
                         MouseLeave="ListView_MouseLeave"
                         ScrollViewer.CanContentScroll="True"
                         ScrollViewer.VerticalScrollBarVisibility="Disabled"
                         SelectionChanged="ListView_SelectionChanged">
                         <ListView.View>
-                        
+
                             <GridView>
                                 <GridViewColumn
                                     Width="60"
@@ -201,22 +201,32 @@
                                     DisplayMemberBinding="{Binding Type}"
                                     Header="Type" />
                             </GridView>
-                            
-                        </ListView.View>
-                       
-                    </ListView>
-                </StackPanel>
 
+                        </ListView.View>
+
+                    </ListView>
+                </StackPanel >
+                <StackPanel Orientation="Vertical" Height="336" Width="141" Margin="0">
+                    <Grid HorizontalAlignment="Left" Height="331" Margin="10,0,0,0" Width="121">
+                        <Button x:Name="Delete" Click="DeleteItem" Margin="0,145,0,144" Content="Delete" RenderTransformOrigin="-0.552,0.524" HorizontalAlignment="Right" Width="121" />
+                        <Button Content="Para cima" Click="ToUpItem" Margin="0,102,0,191"/>
+                        <Button Content="Para baixo" Click="ToDownItem" Margin="0,192,0,101"/>
+                    </Grid>
+                </StackPanel>
                 <TextBox
                     x:Name="inspectBox"
-                    Width="445"
-                    Height="337"
-                    Margin="5,0"
+                    Width="307"
+                    Height="336"
+                    Margin="0"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     IsEnabled="False"
                     Text="Inspecting..."
-                    TextWrapping="Wrap" />
+                    TextWrapping="Wrap" >
+                    <TextBox.BindingGroup>
+                        <BindingGroup/>
+                    </TextBox.BindingGroup>
+                </TextBox>
             </StackPanel>
 
             <Label x:Name="countRecord" Content="0 record(s)" />

@@ -509,10 +509,16 @@ namespace MouseKeyPlayback
 		private void ListView_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
 		{
 			var item = listView.SelectedItem as Record;
-			if (!listView.HasItems || item.EventMouse == null)
+            if(item == null)
+                {
+                return;
+            }
+
+          if (!listView.HasItems  ||  item.EventMouse == null  )
 				return;
 			try
-			{
+			{	
+              
 				if(g != null)
 				{
 					RedrawWindow(IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, RDW_INVALIDATE | RDW_ALLCHILDREN | RDW_UPDATENOW);
@@ -630,8 +636,23 @@ namespace MouseKeyPlayback
 				window.keyboardEvents.ForEach(me => LogKeyboardEvents(me));
 			}
 		}
+        private void DeleteItem(object sender, RoutedEventArgs e)
+        {
+            var item = listView.SelectedItem as Record;
+          
+            try
+            {
+                listView.Items.Remove(item);
+                listView.Items.Refresh() ;
 
-		private void BtnWait_Click(object sender, RoutedEventArgs e)
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        private void BtnWait_Click(object sender, RoutedEventArgs e)
 		{
 			CreateWaitWindow window = new CreateWaitWindow();
 			window.ShowDialog();
@@ -642,5 +663,34 @@ namespace MouseKeyPlayback
 				LogWaitEvent(record);
 			}
 		}
-	}
+        void Move(int shift)
+        {
+            var item = listView.SelectedItem as Record;
+            int p = listView.SelectedIndex;
+
+            listView.Items.RemoveAt(p);
+            listView.Items.Insert(p + shift, item);
+            listView.SelectedItem = item;
+        }
+        private void ToUpItem(object sender, RoutedEventArgs e)
+        {
+            if(listView.SelectedIndex > 0)
+            {
+Move(-1);
+            }
+            
+
+        }
+
+        private void ToDownItem(object sender, RoutedEventArgs e)
+        {
+            int p = listView.SelectedIndex;
+            if(p >= 0 && p < listView.Items.Count - 1)
+            {
+            Move(1);
+
+            }
+
+        }
+    }
 }
