@@ -125,7 +125,7 @@
                     BorderThickness="0"
                     Click="BtnWait_Click">
                     <StackPanel>
-                        <Image Height="81" Source="Images/time.jpg" />
+                        <Image Height="81" Source="Images/time.jpg" RenderTransformOrigin="0.5,0.519" />
                         <TextBlock Text="Wait" TextAlignment="Center" />
                     </StackPanel>
                 </Button>
@@ -211,6 +211,7 @@
                         <Button x:Name="Delete" Click="DeleteItem" Margin="0,145,0,144" Content="Delete" RenderTransformOrigin="-0.552,0.524" HorizontalAlignment="Right" Width="121" />
                         <Button Content="Para cima" Click="ToUpItem" Margin="0,102,0,191"/>
                         <Button Content="Para baixo" Click="ToDownItem" Margin="0,192,0,101"/>
+                        <Button Content="Configurar" Click="Config" Margin="0,59,0,234"/>
                     </Grid>
                 </StackPanel>
                 <TextBox

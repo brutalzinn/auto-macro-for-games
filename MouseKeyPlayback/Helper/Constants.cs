@@ -11,8 +11,7 @@ namespace MouseKeyPlayback
         public const string KEYBOARD = "Keyboard";
         public const string MOUSE = "Mouse";
 		public const string WAIT = "WAIT";
-        public const string WAITRandomMin = "RANDOM";
-        public const string WAITRandomMax = "RANDOM";
+        public const string WAITRandom = "RANDOM";
 
         public const int MOUSEEVENT_LEFTDOWN = 0x0002;
         public const int MOUSEEVENTF_LEFTUP = 0x0004;

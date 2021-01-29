@@ -25,20 +25,35 @@ namespace MouseKeyPlayback.Views
         public CreateWaitWindow()
         {
             InitializeComponent();
-
+			
 			System.Windows.Application curApp = System.Windows.Application.Current;
 			Window mainWindow = curApp.MainWindow;
 			this.Left = mainWindow.Left + (mainWindow.Width - this.ActualWidth) / 2;
 			this.Top = mainWindow.Top + (mainWindow.Height - this.ActualHeight) / 2;
+		
 		}
 
 		private void BtnOk_Click(object sender, RoutedEventArgs e)
 		{
-			waitEvent = new Record
+			if (!HeaderControl.IsExpanded)
 			{
-				WaitMs = Int32.Parse(tbxWait.Text),
-				Type = Constants.WAIT
-			};
+				waitEvent = new Record
+				{
+					WaitMs = Int32.Parse(tbxWait.Text),
+					Type = Constants.WAIT
+				};
+			}
+			else if(HeaderControl.IsExpanded)
+            {
+				waitEvent = new Record
+				{
+					WaitMaxMs = Int32.Parse(RandomMax.Text),
+					WaitMinMs = Int32.Parse(RandomMin.Text),
+					Type = Constants.WAITRandom
+				};
+				
+
+			}
 			this.Close();
 		}
 
@@ -83,6 +98,17 @@ namespace MouseKeyPlayback.Views
 			{
 				this.Height = 188;
 			}
+		}
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+			if(waitEvent != null)
+            {
+			tbxWait.Text = waitEvent.WaitMs.ToString();
+				RandomMax.Text = waitEvent.WaitMaxMs.ToString();
+				RandomMin.Text = waitEvent.WaitMinMs.ToString();
+            }
+
 		}
     }
 }

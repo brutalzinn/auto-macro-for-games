@@ -692,5 +692,40 @@ Move(-1);
             }
 
         }
+
+        private void Config(object sender, RoutedEventArgs e)
+        {
+            var item = listView.SelectedItem as Record;
+            switch (item.Type)
+            {
+                case Constants.MOUSE:
+                   
+                    break;
+                case Constants.KEYBOARD:
+                  
+                    break;
+                case Constants.WAIT:
+                    CreateWaitWindow window = new CreateWaitWindow(); 
+                    window.waitEvent = item;            
+
+   window.ShowDialog();
+ 
+               
+                    break;
+                case Constants.WAITRandom:
+                    CreateWaitWindow windowRandom = new CreateWaitWindow();
+ 
+                windowRandom.waitEvent = item; 
+
+                    windowRandom.ShowDialog();
+
+                   
+                    break;
+
+
+                default:
+                    break;
+            }
+        }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MouseKeyPlayback.Views"
         mc:Ignorable="d"
-        Title="CreateWaitWindow" Height="187.6" Width="211.2">
+        Title="CreateWaitWindow" Height="187.6" Width="211.2" Loaded="Window_Loaded">
     <Grid Margin="0,0,0,5">
         <Grid.RowDefinitions>
             <RowDefinition Height="52*"/>
