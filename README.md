@@ -1,7 +1,7 @@
 # App Recorder
 
 This application is based on app recorder
-
+[App Recorder repository]: https://github.com/mocmeo/app-recorder
 
 # Features
 - Display information about UI element being clicked. (AutomationElement)
