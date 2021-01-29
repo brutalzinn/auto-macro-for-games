@@ -1,0 +1,227 @@
+﻿<Window
+    x:Class="MouseKeyPlayback.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:MouseKeyPlayback"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="App Recorder"
+    Width="977.6"
+    Height="513.265"
+    Closed="Window_Closed"
+    Loaded="Window_Loaded"
+    mc:Ignorable="d">
+    <Border Padding="5">
+        <StackPanel>
+            <Grid Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button
+                    x:Name="btnRecord"
+                    Grid.Column="0"
+                    Margin="0,0,5,0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="BtnRecord_Click">
+                    <StackPanel>
+                        <Image Source="Images/record.png" />
+                        <TextBlock Margin="0" TextAlignment="Center">Record</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button
+                    x:Name="btnPlayback"
+                    Grid.Column="1"
+                    Margin="0,0,5,0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="BtnPlayback_Click">
+                    <StackPanel>
+                        <Image Source="Images/play.png" />
+                        <TextBlock TextAlignment="Center">Play</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button
+                    x:Name="btnStop"
+                    Grid.Column="2"
+                    Margin="0,0,5,0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="BtnStop_Click">
+                    <StackPanel>
+                        <Image Source="Images/stop.png" />
+                        <TextBlock TextAlignment="Center">Stop</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button
+                    x:Name="btnImport"
+                    Grid.Column="3"
+                    Margin="0,0,5,0"
+                    Background="Transparent"
+                    BorderThickness="0">
+                    <StackPanel>
+                        <Image Source="Images/import.png" />
+                        <TextBlock TextAlignment="Center">Import</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button
+                    x:Name="btnExport"
+                    Grid.Column="4"
+                    Margin="0,0,5,0"
+                    Background="Transparent"
+                    BorderThickness="0">
+                    <StackPanel>
+                        <Image Source="Images/export.png" />
+                        <TextBlock TextAlignment="Center">Export</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button
+                    x:Name="btnCreateClick"
+                    Grid.Column="5"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="BtnCreateClick_Click">
+                    <StackPanel>
+                        <Image Height="81" Source="Images/mouse_icon.png" />
+                        <TextBlock TextAlignment="Center">Click</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button
+                    x:Name="btnInsertKey"
+                    Grid.Column="6"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="BtnInsertKey_Click">
+                    <StackPanel>
+                        <Image Height="81" Source="Images/keyboard.png" />
+                        <TextBlock Text="Key" TextAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    x:Name="btnCreateText"
+                    Grid.Column="7"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="BtnCreateText_Click">
+                    <StackPanel>
+                        <Image Height="81" Source="Images/cursor-field.png" />
+                        <TextBlock Text="Text" TextAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    x:Name="btnWait"
+                    Grid.Column="8"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="BtnWait_Click">
+                    <StackPanel>
+                        <Image Height="81" Source="Images/time.jpg" />
+                        <TextBlock Text="Wait" TextAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <Grid Grid.Column="9">
+                    <StackPanel Orientation="Vertical" />
+                    <Label
+                        Margin="5,0,0,0"
+                        Content="App source:"
+                        MouseDoubleClick="Label_MouseDoubleClick" />
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox
+                            x:Name="appPath"
+                            Width="190"
+                            Margin="10,22,0,30"
+                            HorizontalAlignment="Left"
+                            TextWrapping="Wrap" />
+                        <Button
+                            x:Name="btnOpenFile"
+                            Width="28"
+                            Height="28"
+                            Margin="3,18,0,0"
+                            VerticalAlignment="Top"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Click="BtnOpenFile_Click">
+                            <StackPanel>
+                                <Image Source="Images/open-file.png" />
+                                <TextBlock TextAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <Label
+                        Margin="5,70,0,0"
+                        Content="Repeat:"
+                        MouseDoubleClick="Label_MouseDoubleClick" />
+
+                    <TextBox
+                        x:Name="repeatTime"
+                        Width="31"
+                        Margin="54,75,0,6.2"
+                        HorizontalAlignment="Left"
+                        Text="1" />
+                </Grid>
+            </Grid>
+
+            <StackPanel Orientation="Horizontal">
+                <StackPanel>
+                    <ListView
+                        x:Name="listView"
+                        Width="514"
+                        Height="338"
+                        Margin="0,0,0.4,0"
+                        MouseLeave="ListView_MouseLeave"
+                        ScrollViewer.CanContentScroll="True"
+                        ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                        SelectionChanged="ListView_SelectionChanged">
+                        <ListView.View>
+                        
+                            <GridView>
+                                <GridViewColumn
+                                    Width="60"
+                                    DisplayMemberBinding="{Binding Id}"
+                                    Header="Id" />
+                                <GridViewColumn
+                                    Width="260"
+                                    DisplayMemberBinding="{Binding Content}"
+                                    Header="Description" />
+                                <GridViewColumn
+                                    Width="90"
+                                    DisplayMemberBinding="{Binding Type}"
+                                    Header="Type" />
+                            </GridView>
+                            
+                        </ListView.View>
+                       
+                    </ListView>
+                </StackPanel>
+
+                <TextBox
+                    x:Name="inspectBox"
+                    Width="445"
+                    Height="337"
+                    Margin="5,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    IsEnabled="False"
+                    Text="Inspecting..."
+                    TextWrapping="Wrap" />
+            </StackPanel>
+
+            <Label x:Name="countRecord" Content="0 record(s)" />
+
+
+        </StackPanel>
+    </Border>
+</Window>
