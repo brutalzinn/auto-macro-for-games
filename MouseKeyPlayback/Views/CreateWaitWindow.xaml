@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MouseKeyPlayback.Views"
         mc:Ignorable="d"
-        Title="CreateWaitWindow" Height="261.6" Width="211.2">
-    <Grid Margin="0,0,0,3">
+        Title="CreateWaitWindow" Height="187.6" Width="211.2">
+    <Grid Margin="0,0,0,5">
         <Grid.RowDefinitions>
             <RowDefinition Height="52*"/>
             <RowDefinition Height="79*"/>
@@ -16,43 +16,13 @@
         <Button x:Name="btnOk" Content="OK" HorizontalAlignment="Left" Margin="10,0,0,9" VerticalAlignment="Bottom" Width="60" Click="BtnOk_Click" Grid.Row="1"/>
         <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Margin="133,0,0,9" VerticalAlignment="Bottom" Width="60" Click="BtnCancel_Click" Grid.Row="1"/>
         <Label Content="ms" HorizontalAlignment="Left" Margin="132,33,0,0" VerticalAlignment="Top" Grid.RowSpan="2"/>
-        <Expander X:Name ="ExpanderD" Header="Expander" HorizontalAlignment="Left" Margin="56,7,0,33" Width="87" IsExpanded="True"  Grid.Row="1" Expanded="Expander_Expanded" >
-            <Expander.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform AngleY="-0.235"/>
-                    <RotateTransform/>
-                    <TranslateTransform Y="-0.437"/>
-                </TransformGroup>
-            </Expander.RenderTransform>
-            <StackPanel Margin="10">
-
-                <TextBox x:Name ="RandomMin"  Text=""  Margin="5,5,0,5" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="51">
-                    <TextBox.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform AngleY="-0.198"/>
-                            <RotateTransform/>
-                            <TranslateTransform Y="-0.217"/>
-                        </TransformGroup>
-                    </TextBox.RenderTransform>
-                </TextBox>
-                <TextBox x:Name ="RandomMax"  Text=""  Margin="5,5,0,5" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="51">
-                    <TextBox.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform AngleY="-0.198"/>
-                            <RotateTransform/>
-                            <TranslateTransform Y="-0.217"/>
-                        </TransformGroup>
-                    </TextBox.RenderTransform>
-                </TextBox>
-
-
+        <Expander x:Name="HeaderControl" Header="RandomTick" HorizontalAlignment="Left" Margin="60,4,0,6" Width="97"  Grid.Row="1" Collapsed="HeaderControl_Collapsed" TouchDown="HeaderControl_TouchDown" FocusableChanged="HeaderControl_FocusableChanged" LayoutUpdated="HeaderControl_LayoutUpdated" >
+            <StackPanel>
+                <TextBox x:Name ="RandomMin"  Text=""  Margin="5,5,0,5" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="80"/>
+                <TextBox x:Name ="RandomMax"  Text=""  Margin="5,5,0,5" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="80"/>
 
 
             </StackPanel>
-
         </Expander>
 
     </Grid>

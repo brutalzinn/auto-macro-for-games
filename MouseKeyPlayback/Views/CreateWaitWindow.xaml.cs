@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -45,5 +46,43 @@ namespace MouseKeyPlayback.Views
 		{
 			this.Close();
 		}
-	}
+
+        private void Expander_Expanded(object sender, RoutedEventArgs e)
+        {
+          
+			
+        }
+
+        private void HeaderControl_KeyDown(object sender, KeyEventArgs e)
+        {
+		
+		}
+
+        private void HeaderControl_Collapsed(object sender, RoutedEventArgs e)
+        {
+		
+		}
+
+        private void HeaderControl_TouchDown(object sender, TouchEventArgs e)
+        {
+				
+        }
+
+        private void HeaderControl_FocusableChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+		
+		}
+
+        private void HeaderControl_LayoutUpdated(object sender, EventArgs e)
+        {
+			if (HeaderControl.IsExpanded)
+			{
+				this.Height = 262;
+			}
+			else
+			{
+				this.Height = 188;
+			}
+		}
+    }
 }
