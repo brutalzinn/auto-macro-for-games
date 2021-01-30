@@ -1,4 +1,5 @@
-﻿using MouseKeyPlayback.Views;
+﻿using BackendAPI.Utils;
+using MouseKeyPlayback.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -31,6 +32,7 @@ namespace MouseKeyPlayback
 		public MainWindow()
         {
             InitializeComponent();
+            ApplicationSettingsManager.LoadSettings();
             recordList = new List<Record>();
             ((INotifyCollectionChanged)listView.Items).CollectionChanged += ListView_CollectionChanged;
 
@@ -846,7 +848,8 @@ Move(-1);
 
         private void OpenConfig(object sender, RoutedEventArgs e)
         {
-
+            ConfigPage Window = new ConfigPage();
+            Window.ShowDialog();
         }
     }
 }

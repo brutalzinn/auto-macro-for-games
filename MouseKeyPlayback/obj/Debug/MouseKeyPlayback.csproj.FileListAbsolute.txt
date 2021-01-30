@@ -82,3 +82,5 @@ C:\Users\rober\Desktop\app-recorder-master\app-recorder-master\MouseKeyPlayback\
 C:\Users\rober\Desktop\app-recorder-master\app-recorder-master\MouseKeyPlayback\obj\Debug\MouseKeyPlayback.csproj.CoreCompileInputs.cache
 C:\Users\rober\Desktop\app-recorder-master\app-recorder-master\MouseKeyPlayback\obj\Debug\MouseKeyPlayback.exe
 C:\Users\rober\Desktop\app-recorder-master\app-recorder-master\MouseKeyPlayback\obj\Debug\MouseKeyPlayback.pdb
+C:\Users\rober\Desktop\app-recorder-master\app-recorder-master\MouseKeyPlayback\obj\Debug\Views\ConfigPage.g.cs
+C:\Users\rober\Desktop\app-recorder-master\app-recorder-master\MouseKeyPlayback\obj\Debug\Views\ConfigPage.baml

@@ -7,11 +7,13 @@
         mc:Ignorable="d"
         Title="ConfigPage" Height="378.049" Width="525.61">
     <Grid Margin="10,10,2,4">
-        <Label Content="Label" HorizontalAlignment="Left" Margin="10,21,0,0" VerticalAlignment="Top" Height="28" Width="42"/>
-        <TextBox HorizontalAlignment="Left" Height="29" Margin="52,241,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="128"/>
-        <TextBox HorizontalAlignment="Left" Height="29" Margin="52,275,0,0" TextWrapping="Wrap" Text="2000" VerticalAlignment="Top" Width="128"/>
-        <Label Content="Min" HorizontalAlignment="Left" Height="23" Margin="9,241,0,0" VerticalAlignment="Top" Width="43"/>
-        <Label Content="Max" HorizontalAlignment="Left" Height="23" Margin="9,275,0,0" VerticalAlignment="Top" Width="43"/>
+        <Label Content="Random delay range config" HorizontalAlignment="Left" Margin="34,23,0,0" VerticalAlignment="Top" Height="28" Width="160"/>
+        <TextBox x:Name ="RandomMinConfig" HorizontalAlignment="Left" Height="29" Margin="52,69,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="128"/>
+        <TextBox x:Name ="RandomMaxConfig" HorizontalAlignment="Left" Height="29" Margin="52,103,0,0" TextWrapping="Wrap" Text="2000" VerticalAlignment="Top" Width="128"/>
+        <Label Content="Min" HorizontalAlignment="Left" Height="23" Margin="9,69,0,0" VerticalAlignment="Top" Width="43"/>
+        <Label Content="Max" HorizontalAlignment="Left" Height="23" Margin="9,103,0,0" VerticalAlignment="Top" Width="43"/>
+        <Button Content="Save" HorizontalAlignment="Left" Height="49" Margin="389,255,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
+        <Button Content="Cancel" HorizontalAlignment="Left" Height="49" Margin="291,255,0,0" VerticalAlignment="Top" Width="83"/>
 
     </Grid>
 </Window>

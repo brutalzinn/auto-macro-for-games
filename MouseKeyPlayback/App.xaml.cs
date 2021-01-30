@@ -13,5 +13,6 @@ namespace MouseKeyPlayback
     /// </summary>
     public partial class App : Application
     {
+
     }
 }

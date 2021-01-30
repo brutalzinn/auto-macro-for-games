@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-16"?>
+<AppSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <minRamdomConfig>0</minRamdomConfig>
+  <maxRamdomConfig>2000</maxRamdomConfig>
+</AppSettings>
