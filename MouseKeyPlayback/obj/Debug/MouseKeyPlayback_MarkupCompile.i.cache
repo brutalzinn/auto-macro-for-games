@@ -16,5 +16,5 @@ C:\Users\rober\Desktop\app-recorder-master\app-recorder-master\MouseKeyPlayback\
 17-554029437
 MainWindow.xaml;Views\ConfigPage.xaml;Views\CreateInsertKeyWindow.xaml;Views\CreateManualClickWindow.xaml;Views\CreateManualTypeKeyWindow.xaml;Views\CreateWaitWindow.xaml;
 
-False
+True
 
