@@ -67,6 +67,7 @@
                 </Button>
                 <Button
                     x:Name="btnImport"
+                    Click="ButtonImport"
                     Grid.Column="4"
                     Margin="0,0,5,0"
                     Background="Transparent"
@@ -249,6 +250,7 @@
                         <Button Content="Para baixo" Click="ToDownItem" Margin="0,192,0,101" Grid.ColumnSpan="2"/>
                         <Button Content="Configurar" Click="Config" Margin="0,59,0,234" Grid.ColumnSpan="2"/>
                         <Button Grid.ColumnSpan="2" Content="Refresh" HorizontalAlignment="Left" Height="41" Margin="0,235,0,0" VerticalAlignment="Top" Width="121" Click="Button_Click"/>
+                        <Button Grid.ColumnSpan="2" Content="Clear all" HorizontalAlignment="Left" Height="41" Margin="0,281,0,0" VerticalAlignment="Top" Width="121" Click="ClearAll"/>
                     </Grid>
                 </StackPanel>
                 <TextBox

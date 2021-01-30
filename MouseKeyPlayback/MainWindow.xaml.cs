@@ -1,4 +1,5 @@
-﻿using BackendAPI.Utils;
+﻿
+using MouseKeyPlayback.Utils;
 using MouseKeyPlayback.Views;
 using System;
 using System.Collections.Generic;
@@ -957,6 +958,46 @@ this.recordList.Add(item);
         private void ExportButton(object sender, RoutedEventArgs e)
         {
 
+
+            Microsoft.Win32.SaveFileDialog openFileDlg = new Microsoft.Win32.SaveFileDialog();
+            // Launch OpenFileDialog by calling ShowDialog method
+            Nullable<bool> result = openFileDlg.ShowDialog();
+            // Get the selected file name and display in a TextBox.
+            // Load content of file in a TextBlock
+            if (result == true) { 
+
+                AppExportUtils.Settings = new AppExportSettings();
+            AppExportUtils.Settings.recordList = recordList ;
+
+                AppExportUtils.SaveSettings(openFileDlg.FileName);
+            }
+
+        }
+
+        private void ButtonImport(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog openFileDlg = new Microsoft.Win32.OpenFileDialog();
+            // Launch OpenFileDialog by calling ShowDialog method
+            Nullable<bool> result = openFileDlg.ShowDialog();
+            // Get the selected file name and display in a TextBox.
+            // Load content of file in a TextBlock
+            if (result == true)
+            {
+               
+                AppExportUtils.LoadSettings(openFileDlg.FileName);
+                
+                foreach(Record item in AppExportUtils.Settings.recordList)
+                {
+                    this.listView.Items.Add(item);
+                }
+            }
+        }
+
+        private void ClearAll(object sender, RoutedEventArgs e)
+        {
+            this.recordList.Clear();
+            this.listView.Items.Clear();
+            
         }
     }
 }

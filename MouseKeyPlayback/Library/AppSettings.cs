@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace BackendAPI.Utils
+namespace MouseKeyPlayback.Utils
 {
 
     public static class ApplicationSettingsManager

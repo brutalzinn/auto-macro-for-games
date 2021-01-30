@@ -7,7 +7,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace BackendAPI.Utils
+namespace MouseKeyPlayback.Utils
 {
     public class XMLUtils
     {

@@ -63,6 +63,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="InterfaceWindow.cs" />
+    <Compile Include="Library\AppExportUtils.cs" />
     <Compile Include="Library\AppSettings.cs" />
     <Compile Include="Library\XMLUtils.cs" />
     <Compile Include="Views\ConfigPage.xaml.cs">

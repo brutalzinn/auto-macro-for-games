@@ -9,6 +9,7 @@ namespace MouseKeyPlayback
 {
     public class Record
     {
+     
         public int Id { get; set; }
         public string Content { get; set; }
         public MouseEvent EventMouse { get; set; }
