@@ -128,20 +128,30 @@
                         <Image Height="81" Source="Images/time.jpg" RenderTransformOrigin="0.5,0.519" />
                         <TextBlock Text="Wait" TextAlignment="Center" />
                     </StackPanel>
+
                 </Button>
-
+                <Button Click="OpenConfig">
+                    <StackPanel>
+                        <Image Height="81" Source="Images/settings.png" RenderTransformOrigin="0.5,0.519" />
+                        <TextBlock Text="Config" TextAlignment="Center" />
+                    </StackPanel>
+                </Button>
                 <Grid Grid.Column="9">
-                    <StackPanel Orientation="Vertical" />
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="80*"/>
+                        <RowDefinition Height="19*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Vertical" Grid.RowSpan="2" />
                     <Label
-                        Margin="5,0,0,0"
+                        Margin="10,0,0,0"
                         Content="App source:"
-                        MouseDoubleClick="Label_MouseDoubleClick" />
+                        MouseDoubleClick="Label_MouseDoubleClick" Grid.RowSpan="2" />
 
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Grid.RowSpan="2">
                         <TextBox
                             x:Name="appPath"
                             Width="190"
-                            Margin="10,22,0,30"
+                            Margin="10,22,0,52"
                             HorizontalAlignment="Left"
                             TextWrapping="Wrap" />
                         <Button
@@ -161,16 +171,25 @@
                     </StackPanel>
 
                     <Label
-                        Margin="5,70,0,0"
-                        Content="Repeat:"
-                        MouseDoubleClick="Label_MouseDoubleClick" />
+                        Margin="0,115,130,0"
+                        MouseDoubleClick="Label_MouseDoubleClick" Grid.Row="1" >
+                        <CheckBox Content="Insert delay" Width="94"/>
+                    </Label>
+                 
+                    <Label
+                        Margin="0,95,0,-2"
+                         HorizontalAlignment="Left"
+                        MouseDoubleClick="Label_MouseDoubleClick" Grid.Row="1" >
+                        <CheckBox Content="Delay random" Width="94"/>
+                    </Label>
+
 
                     <TextBox
                         x:Name="repeatTime"
-                        Width="31"
-                        Margin="54,75,0,6.2"
-                        HorizontalAlignment="Left"
-                        Text="1" />
+                        Width="46"
+                        Margin="0,115,0,5"
+                        HorizontalAlignment="Right"
+                        Text="1" Grid.Row="1" />
                 </Grid>
             </Grid>
 

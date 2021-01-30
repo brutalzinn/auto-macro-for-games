@@ -843,5 +843,10 @@ Move(-1);
                     break;
             }
         }
+
+        private void OpenConfig(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
