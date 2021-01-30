@@ -25,60 +25,60 @@ namespace MouseKeyPlayback
         private int count = 0;
         private bool isHooked = false;
         private List<Record> recordList;
-		#endregion
+        #endregion
 
-		private volatile bool m_StopThread = false;
+        private volatile bool m_StopThread = false;
 
-		public MainWindow()
+        public MainWindow()
         {
             InitializeComponent();
             ApplicationSettingsManager.LoadSettings();
             recordList = new List<Record>();
             ((INotifyCollectionChanged)listView.Items).CollectionChanged += ListView_CollectionChanged;
 
-			lastInPutNfo = new LASTINPUTINFO();
-			lastInPutNfo.cbSize = (uint)Marshal.SizeOf(lastInPutNfo);
+            lastInPutNfo = new LASTINPUTINFO();
+            lastInPutNfo.cbSize = (uint)Marshal.SizeOf(lastInPutNfo);
 
-			uint idleTime = 0;
-			Thread thread = new Thread(new ThreadStart(delegate() {
-				while (!m_StopThread)
-				{
-					if (idleTime == 0)
-					{
-						if (g != null)
-						{
-							try
-							{
-								RedrawWindow(IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, RDW_INVALIDATE | RDW_ALLCHILDREN | RDW_UPDATENOW);
-								g.Dispose();
-								ReleaseDC(desktop);
-							}
-							catch (Exception e)
-							{
-								Console.WriteLine(e);
-							}
-						}						
-					}
-					idleTime = GetLastInputTime();
-					if (idleTime < 1)
-						drawOutlineElement();
-					Console.WriteLine(idleTime);
-					Thread.Sleep(1000);
-				}				
-				//if(GetLastInputTime() > 1000)
+            uint idleTime = 0;
+            Thread thread = new Thread(new ThreadStart(delegate () {
+                while (!m_StopThread)
+                {
+                    if (idleTime == 0)
+                    {
+                        if (g != null)
+                        {
+                            try
+                            {
+                                RedrawWindow(IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, RDW_INVALIDATE | RDW_ALLCHILDREN | RDW_UPDATENOW);
+                                g.Dispose();
+                                ReleaseDC(desktop);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                            }
+                        }
+                    }
+                    idleTime = GetLastInputTime();
+                    if (idleTime < 1)
+                        drawOutlineElement();
+                    Console.WriteLine(idleTime);
+                    Thread.Sleep(1000);
+                }
+                //if(GetLastInputTime() > 1000)
 
-			}));
-			//thread.Start();
+            }));
+            //thread.Start();
 
         }
 
-		protected override void OnClosed(EventArgs e)
-		{
-			base.OnClosed(e);
-			m_StopThread = true;
-		}
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            m_StopThread = true;
+        }
 
-		private void ListView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void ListView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             // Scroll to the last item
             if (e.Action == NotifyCollectionChangedAction.Add)
@@ -210,15 +210,15 @@ namespace MouseKeyPlayback
             }
         }
 
-		[DllImport("User32.dll")]
-		static extern IntPtr GetDC(IntPtr hwnd);
+        [DllImport("User32.dll")]
+        static extern IntPtr GetDC(IntPtr hwnd);
 
-		[DllImport("User32.dll", CallingConvention = CallingConvention.FastCall)]
-		static extern void ReleaseDC(IntPtr dc);
+        [DllImport("User32.dll", CallingConvention = CallingConvention.FastCall)]
+        static extern void ReleaseDC(IntPtr dc);
 
-		IntPtr desktop;
+        IntPtr desktop;
 
-		private void TrackAutomationElement(Record item)
+        private void TrackAutomationElement(Record item)
         {
             if (item.Type == Constants.MOUSE
                 && item.EventMouse.Action == MouseHook.MouseEvents.LeftUp)
@@ -244,15 +244,15 @@ namespace MouseKeyPlayback
                         GetText(targetApp),
                         targetApp.Current.ControlType);
 
-					//desktop = GetDC(IntPtr.Zero);
-					//using (System.Drawing.Graphics g = System.Drawing.Graphics.FromHdc(desktop))
-					//{
-					//	System.Drawing.Pen pen = new System.Drawing.Pen(System.Drawing.Color.Red, 5);
-					//	Rect rect = targetApp.Current.BoundingRectangle;
-					//	Point point = rect.TopLeft;
-					//	g.DrawRectangle(pen, (float)point.X, (float)point.Y, (float)rect.Width, (float)rect.Height);
-					//}
-				}
+                    //desktop = GetDC(IntPtr.Zero);
+                    //using (System.Drawing.Graphics g = System.Drawing.Graphics.FromHdc(desktop))
+                    //{
+                    //	System.Drawing.Pen pen = new System.Drawing.Pen(System.Drawing.Color.Red, 5);
+                    //	Rect rect = targetApp.Current.BoundingRectangle;
+                    //	Point point = rect.TopLeft;
+                    //	g.DrawRectangle(pen, (float)point.X, (float)point.Y, (float)rect.Width, (float)rect.Height);
+                    //}
+                }
                 catch (Exception)
                 {
                     Console.WriteLine("Invalid UI element");
@@ -260,43 +260,43 @@ namespace MouseKeyPlayback
             }
         }
 
-		private void drawOutlineElement()
-		{
-			try
-			{
-				var position = Control.MousePosition;
+        private void drawOutlineElement()
+        {
+            try
+            {
+                var position = Control.MousePosition;
 
-				Point coordinates = new Point(position.X, position.Y);
-				AutomationElement targetApp = AutomationElement.FromPoint(coordinates);
+                Point coordinates = new Point(position.X, position.Y);
+                AutomationElement targetApp = AutomationElement.FromPoint(coordinates);
 
-				Console.WriteLine(targetApp.Current.Name);
-				string appName = targetApp.Current.Name;
-				List<string> forbiden = new List<string>
-				{
-					"",
-					"0",
-					"App Recorder"
-				};
-				foreach(string s in forbiden)
-				{
-					if (appName.Equals(s))
-						return;
-				}
+                Console.WriteLine(targetApp.Current.Name);
+                string appName = targetApp.Current.Name;
+                List<string> forbiden = new List<string>
+                {
+                    "",
+                    "0",
+                    "App Recorder"
+                };
+                foreach (string s in forbiden)
+                {
+                    if (appName.Equals(s))
+                        return;
+                }
 
-				desktop = GetDC(IntPtr.Zero);
-				using (System.Drawing.Graphics g = System.Drawing.Graphics.FromHdc(desktop))
-				{
-					System.Drawing.Pen pen = new System.Drawing.Pen(System.Drawing.Color.Red, 5);
-					Rect rect = targetApp.Current.BoundingRectangle;
-					Point point = rect.TopLeft;
-					g.DrawRectangle(pen, (float)point.X, (float)point.Y, (float)rect.Width, (float)rect.Height);
-				}
-			}
-			catch (Exception)
-			{
-				Console.WriteLine("Invalid UI element");
-			}
-		}
+                desktop = GetDC(IntPtr.Zero);
+                using (System.Drawing.Graphics g = System.Drawing.Graphics.FromHdc(desktop))
+                {
+                    System.Drawing.Pen pen = new System.Drawing.Pen(System.Drawing.Color.Red, 5);
+                    Rect rect = targetApp.Current.BoundingRectangle;
+                    Point point = rect.TopLeft;
+                    g.DrawRectangle(pen, (float)point.X, (float)point.Y, (float)rect.Width, (float)rect.Height);
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Invalid UI element");
+            }
+        }
 
         private string GetText(AutomationElement element)
         {
@@ -322,7 +322,7 @@ namespace MouseKeyPlayback
             var position = Control.MousePosition;
             return new CursorPoint(position.X, position.Y);
         }
-	
+
         private void LogMouseEvents(MouseEvent mEvent)
         {
             count++;
@@ -335,7 +335,33 @@ namespace MouseKeyPlayback
             };
 
             AddRecordItem(item);
+            if (CheckBoxRandom.IsChecked.Value)
+            {
+                Record itemWait = new Record
+                {
+                    Id = count,
+                    WaitMaxMs = ApplicationSettingsManager.Settings.maxRamdomConfig,
+                    WaitMinMs =ApplicationSettingsManager.Settings.minRamdomConfig,
+                    Type = Constants.WAITRandom,
+                    Content = $"Wait {ApplicationSettingsManager.Settings.maxRamdomConfig} MAX Random ms. \n Wait {ApplicationSettingsManager.Settings.minRamdomConfig} Min Random ms "
+                };
+                AddRecordItem(itemWait);
+            }
         }
+   
+            
+
+        
+
+        
+            
+            
+        
+
+    
+
+            
+        
 
         private void LogKeyboardEvents(KeyboardEvent kEvent)
         {
@@ -358,8 +384,17 @@ namespace MouseKeyPlayback
 		{
 			count++;
 			record.Id = count;
-			record.Content = $"Wait {record.WaitMs} ms.";
-			AddRecordItem(record);
+            if (record.WaitMs > 0)
+            {
+                record.Content = $"Wait {record.WaitMs} MS";
+
+            }
+            else
+            {
+                record.Content = $"Wait {record.WaitMaxMs} MAX Random ms. \n Wait {record.WaitMinMs} Min Random ms ";
+
+            }
+            AddRecordItem(record);
 		}
 
         private void AddRecordItem(Record item)
@@ -420,6 +455,13 @@ namespace MouseKeyPlayback
                                 break;
                             case Constants.WAIT:
                                 Thread.Sleep(record.WaitMs);
+                                break;
+
+                            case Constants.WAITRandom:
+                                Random number = new Random();
+                             
+                               
+                                Thread.Sleep(number.Next(record.WaitMinMs, record.WaitMaxMs));
                                 break;
                             default:
                                 break;
@@ -850,6 +892,19 @@ Move(-1);
         {
             ConfigPage Window = new ConfigPage();
             Window.ShowDialog();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.recordList.Clear();
+            foreach(Record item in listView.Items)
+            {
+this.recordList.Add(item);
+
+            }
+            listView.Items.Refresh();
+
+
         }
     }
 }

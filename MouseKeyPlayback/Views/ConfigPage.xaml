@@ -14,6 +14,8 @@
         <Label Content="Max" HorizontalAlignment="Left" Height="23" Margin="9,103,0,0" VerticalAlignment="Top" Width="43"/>
         <Button Content="Save" HorizontalAlignment="Left" Height="49" Margin="389,255,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
         <Button Content="Cancel" HorizontalAlignment="Left" Height="49" Margin="291,255,0,0" VerticalAlignment="Top" Width="83" Click="Button_Click_1"/>
+        <Label Content="Default time:" HorizontalAlignment="Left" Margin="14,162,0,0" VerticalAlignment="Top" Width="85"/>
+        <TextBox x:Name="TextBoxDefaultTimer" HorizontalAlignment="Left" Height="26" Margin="104,162,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="138"/>
 
     </Grid>
 </Window>

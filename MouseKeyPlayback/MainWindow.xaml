@@ -186,7 +186,7 @@
                         Margin="0,95,0,23"
                          HorizontalAlignment="Left"
                         MouseDoubleClick="Label_MouseDoubleClick" Grid.Row="1" >
-                        <CheckBox Content="Delay random" Width="106"/>
+                        <CheckBox x:Name="CheckBoxRandom" Content="Delay random" Width="106"/>
                     </Label>
 
 
@@ -241,6 +241,7 @@
                         <Button Content="Para cima" Click="ToUpItem" Margin="0,102,0,191" Grid.ColumnSpan="2"/>
                         <Button Content="Para baixo" Click="ToDownItem" Margin="0,192,0,101" Grid.ColumnSpan="2"/>
                         <Button Content="Configurar" Click="Config" Margin="0,59,0,234" Grid.ColumnSpan="2"/>
+                        <Button Grid.ColumnSpan="2" Content="Refresh" HorizontalAlignment="Left" Height="41" Margin="0,235,0,0" VerticalAlignment="Top" Width="121" Click="Button_Click"/>
                     </Grid>
                 </StackPanel>
                 <TextBox

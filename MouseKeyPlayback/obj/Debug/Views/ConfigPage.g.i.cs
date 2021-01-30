@@ -56,6 +56,14 @@ namespace MouseKeyPlayback.Views {
         #line default
         #line hidden
         
+        
+        #line 18 "..\..\..\Views\ConfigPage.xaml"
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+        internal System.Windows.Controls.TextBox TextBoxDefaultTimer;
+        
+        #line default
+        #line hidden
+        
         private bool _contentLoaded;
         
         /// <summary>
@@ -107,6 +115,9 @@ namespace MouseKeyPlayback.Views {
             
             #line default
             #line hidden
+            return;
+            case 5:
+            this.TextBoxDefaultTimer = ((System.Windows.Controls.TextBox)(target));
             return;
             }
             this._contentLoaded = true;
