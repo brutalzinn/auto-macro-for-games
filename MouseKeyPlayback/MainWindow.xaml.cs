@@ -754,13 +754,52 @@ Move(-1);
             }
 
         }
+   
+        private void LogMouseEventsUpdate(MouseEvent mEvent)
+        {
+           
+            Record item = new Record
+            {
+                Id = count,
+                EventMouse = mEvent,
+                Type = Constants.MOUSE,
+                Content = String.Format("{0} was triggered at ({1}, {2})", mEvent.Action, mEvent.Location.X, mEvent.Location.Y)
+            };
+            foreach (Record itemRecord in listView.Items)
+            {
+                if (itemRecord.Id == count)
+                {
+
+                    var itemListView = listView.SelectedItem as Record;
+                    int p = listView.SelectedIndex;
+
+                    listView.Items.RemoveAt(p);
+                    listView.Items.Insert(p, item);
+                    listView.SelectedItem = item;
+                    listView.Items.Refresh();
+                    break;
+                }
+
+            }
+
+
+        }
         private void Config(object sender, RoutedEventArgs e)
         {
             var item = listView.SelectedItem as Record;
             switch (item.Type)
             {
                 case Constants.MOUSE:
-                   
+
+                    CreateManualClickWindow MouseWindow = new CreateManualClickWindow();
+                    MouseWindow.mouseRecordEvent = item;
+
+                    MouseWindow.ShowDialog();
+                    if (MouseWindow.mouseEvents != null)
+                    {
+                        MouseWindow.mouseEvents.ForEach(me => LogMouseEventsUpdate(me));
+                    }
+
                     break;
                 case Constants.KEYBOARD:
                     CreateInsertKeyWindow keyboardwindow = new CreateInsertKeyWindow();

@@ -46,6 +46,7 @@ namespace MouseKeyPlayback
             Left = MouseEvents.LeftDown,
             Middle = MouseEvents.MiddleDown,
             Right = MouseEvents.RightDown
+               
         }
 
 		public enum MouseActions

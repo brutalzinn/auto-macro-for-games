@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace MouseKeyPlayback.Views
 	public partial class CreateManualClickWindow : Window
 	{
 		private MouseHook mouseHook = new MouseHook();
+		public Record mouseRecordEvent { get; set; }
 		public List<MouseEvent> mouseEvents { get; set; }
 		private double x;
 		private double y;
@@ -164,5 +166,74 @@ namespace MouseKeyPlayback.Views
 			}
 			return false;
 		}
-	}
+		private void loadCbxMouseButton(MouseKeys value)
+		{
+
+			foreach (MouseKeys name in cbxMouseButton.Items)
+			{
+				if (name == value)
+				{
+
+					cbxMouseButton.SelectedItem = name;
+				}
+			}
+		}
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			if (mouseRecordEvent != null)
+			{
+				var mouseButton = (MouseKeys)mouseRecordEvent.EventMouse.Action;
+				var mouseAction = (MouseActions)mouseRecordEvent.EventMouse.Action ;
+
+
+                switch (mouseRecordEvent.EventMouse.Action)
+                {
+					case MouseEvents.LeftDown:
+
+						cbxMouseButton.SelectedItem = MouseKeys.Left;
+						cbxMouseAction.SelectedItem = MouseActions.Down;
+						Debug.WriteLine("LEFT BUTTON CLICK");
+						break;
+					case MouseEvents.LeftUp:
+						cbxMouseButton.SelectedItem = MouseKeys.Left;
+						cbxMouseAction.SelectedItem = MouseActions.Up;
+						Debug.WriteLine("LEFT BUTTON CLICK");
+							
+                        break;
+					case MouseEvents.RightUp:
+						cbxMouseButton.SelectedItem = MouseKeys.Right;
+						cbxMouseAction.SelectedItem = MouseActions.Up;
+						Debug.WriteLine("RIGHT BUTTON CLICK");
+						break;
+					case MouseEvents.RightDown:
+						cbxMouseButton.SelectedItem = MouseKeys.Right;
+						cbxMouseAction.SelectedItem = MouseActions.Down;
+						Debug.WriteLine("RIGHT BUTTON CLICK");
+
+						break;
+					case MouseEvents.MiddleUp:
+						cbxMouseButton.SelectedItem = MouseKeys.Middle;
+						cbxMouseAction.SelectedItem = MouseActions.Up;
+						Debug.WriteLine("Middle BUTTON CLICK");
+						break;
+					case MouseEvents.MiddleDown:
+
+						cbxMouseButton.SelectedItem = MouseKeys.Middle;
+						cbxMouseAction.SelectedItem = MouseActions.Down;
+						Debug.WriteLine("Middle BUTTON CLICK");
+
+						break;
+					
+
+				
+
+
+				}
+				tbxX.Text = mouseRecordEvent.EventMouse.Location.X.ToString();
+				tbxY.Text = mouseRecordEvent.EventMouse.Location.Y.ToString();
+
+
+			}
+		}
+    }
 }

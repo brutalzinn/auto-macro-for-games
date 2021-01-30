@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MouseKeyPlayback.Views"
         mc:Ignorable="d"
-        Title="Insert mouse click action" Height="323" Width="403">
+        Title="Insert mouse click action" Height="323" Width="403" Loaded="Window_Loaded">
     <Grid>
         <Label Content="Click to capture the mouse position" Margin="100,33,95.6,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
         <Label Content="Button" HorizontalAlignment="Left" Margin="100,69,0,0" VerticalAlignment="Top" Padding="0,5,5,5" RenderTransformOrigin="0.323,0.469"/>
