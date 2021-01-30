@@ -23,6 +23,8 @@ namespace MouseKeyPlayback.Views
         public ConfigPage()
         {
             InitializeComponent();
+              RandomMinConfig.Text = ApplicationSettingsManager.Settings.minRamdomConfig.ToString();
+            RandomMaxConfig.Text = ApplicationSettingsManager.Settings.maxRamdomConfig.ToString();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -30,7 +32,12 @@ namespace MouseKeyPlayback.Views
            ApplicationSettingsManager.Settings.minRamdomConfig = Convert.ToInt32(RandomMinConfig.Text);
             ApplicationSettingsManager.Settings.maxRamdomConfig = Convert.ToInt32(RandomMaxConfig.Text);
             ApplicationSettingsManager.SaveSettings();
+            this.Close();
+        }
 
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

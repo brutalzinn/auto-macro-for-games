@@ -12,10 +12,11 @@
     Loaded="Window_Loaded"
     mc:Ignorable="d">
     <Border Padding="5">
-        <StackPanel>
+        <StackPanel Margin="0,0,0,-5">
             <Grid Margin="0,0,0,10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="18" />
+                    <ColumnDefinition Width="62"/>
                     <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="80" />
@@ -34,7 +35,7 @@
                     Margin="0,0,5,0"
                     Background="Transparent"
                     BorderThickness="0"
-                    Click="BtnRecord_Click">
+                    Click="BtnRecord_Click" Grid.ColumnSpan="2">
                     <StackPanel>
                         <Image Source="Images/record.png" />
                         <TextBlock Margin="0" TextAlignment="Center">Record</TextBlock>
@@ -42,7 +43,7 @@
                 </Button>
                 <Button
                     x:Name="btnPlayback"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Margin="0,0,5,0"
                     Background="Transparent"
                     BorderThickness="0"
@@ -54,7 +55,7 @@
                 </Button>
                 <Button
                     x:Name="btnStop"
-                    Grid.Column="2"
+                    Grid.Column="3"
                     Margin="0,0,5,0"
                     Background="Transparent"
                     BorderThickness="0"
@@ -66,7 +67,7 @@
                 </Button>
                 <Button
                     x:Name="btnImport"
-                    Grid.Column="3"
+                    Grid.Column="4"
                     Margin="0,0,5,0"
                     Background="Transparent"
                     BorderThickness="0">
@@ -77,7 +78,7 @@
                 </Button>
                 <Button
                     x:Name="btnExport"
-                    Grid.Column="4"
+                    Grid.Column="5"
                     Margin="0,0,5,0"
                     Background="Transparent"
                     BorderThickness="0">
@@ -88,7 +89,7 @@
                 </Button>
                 <Button
                     x:Name="btnCreateClick"
-                    Grid.Column="5"
+                    Grid.Column="6"
                     Background="Transparent"
                     BorderThickness="0"
                     Click="BtnCreateClick_Click">
@@ -99,7 +100,7 @@
                 </Button>
                 <Button
                     x:Name="btnInsertKey"
-                    Grid.Column="6"
+                    Grid.Column="7"
                     Background="Transparent"
                     BorderThickness="0"
                     Click="BtnInsertKey_Click">
@@ -110,7 +111,7 @@
                 </Button>
                 <Button
                     x:Name="btnCreateText"
-                    Grid.Column="7"
+                    Grid.Column="8"
                     Background="Transparent"
                     BorderThickness="0"
                     Click="BtnCreateText_Click">
@@ -121,7 +122,7 @@
                 </Button>
                 <Button
                     x:Name="btnWait"
-                    Grid.Column="8"
+                    Grid.Column="9"
                     Background="Transparent"
                     BorderThickness="0"
                     Click="BtnWait_Click">
@@ -131,9 +132,13 @@
                     </StackPanel>
 
                 </Button>
-                <Button Click="OpenConfig" Grid.Column="9">
+                <Button Click="OpenConfig" Grid.Column="10" Background="{x:Null}" Foreground="{x:Null}" BorderBrush="{x:Null}">
                     <StackPanel>
-                        <Image Height="81" Source="Images/settings.png" RenderTransformOrigin="0.5,0.519" />
+                        <Image Height="124" Source="Images/settingstwo.png" Width="75" >
+                            <Image.OpacityMask>
+                                <ImageBrush ImageSource="Images/settingstwo.png"/>
+                            </Image.OpacityMask>
+                        </Image>
                         <TextBlock Text="Config" TextAlignment="Center" />
                     </StackPanel>
                 </Button>
@@ -228,10 +233,14 @@
                 </StackPanel >
                 <StackPanel Orientation="Vertical" Height="336" Width="141" Margin="0">
                     <Grid HorizontalAlignment="Left" Height="331" Margin="10,0,0,0" Width="121">
-                        <Button x:Name="Delete" Click="DeleteItem" Margin="0,145,0,144" Content="Delete" RenderTransformOrigin="-0.552,0.524" HorizontalAlignment="Right" Width="121" />
-                        <Button Content="Para cima" Click="ToUpItem" Margin="0,102,0,191"/>
-                        <Button Content="Para baixo" Click="ToDownItem" Margin="0,192,0,101"/>
-                        <Button Content="Configurar" Click="Config" Margin="0,59,0,234"/>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="74*"/>
+                            <ColumnDefinition Width="47*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="Delete" Click="DeleteItem" Margin="0,145,0,144" Content="Delete" RenderTransformOrigin="-0.552,0.524" HorizontalAlignment="Right" Width="121" Grid.ColumnSpan="2" />
+                        <Button Content="Para cima" Click="ToUpItem" Margin="0,102,0,191" Grid.ColumnSpan="2"/>
+                        <Button Content="Para baixo" Click="ToDownItem" Margin="0,192,0,101" Grid.ColumnSpan="2"/>
+                        <Button Content="Configurar" Click="Config" Margin="0,59,0,234" Grid.ColumnSpan="2"/>
                     </Grid>
                 </StackPanel>
                 <TextBox

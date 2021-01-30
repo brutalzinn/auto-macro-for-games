@@ -13,7 +13,7 @@
         <Label Content="Min" HorizontalAlignment="Left" Height="23" Margin="9,69,0,0" VerticalAlignment="Top" Width="43"/>
         <Label Content="Max" HorizontalAlignment="Left" Height="23" Margin="9,103,0,0" VerticalAlignment="Top" Width="43"/>
         <Button Content="Save" HorizontalAlignment="Left" Height="49" Margin="389,255,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
-        <Button Content="Cancel" HorizontalAlignment="Left" Height="49" Margin="291,255,0,0" VerticalAlignment="Top" Width="83"/>
+        <Button Content="Cancel" HorizontalAlignment="Left" Height="49" Margin="291,255,0,0" VerticalAlignment="Top" Width="83" Click="Button_Click_1"/>
 
     </Grid>
 </Window>
