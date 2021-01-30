@@ -2,4 +2,7 @@
 <AppSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <minRamdomConfig>100</minRamdomConfig>
   <maxRamdomConfig>400</maxRamdomConfig>
+  <DefaultTimer>0</DefaultTimer>
+  <BetweenKeys>true</BetweenKeys>
+  <ForeachKeys>true</ForeachKeys>
 </AppSettings>

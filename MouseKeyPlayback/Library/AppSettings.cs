@@ -73,7 +73,9 @@ namespace BackendAPI.Utils
         
         public int minRamdomConfig { get; set; }
         public int maxRamdomConfig { get; set; }
-
+        public int DefaultTimer{ get; set; }
+       public bool BetweenKeys { get; set; }
+        public bool ForeachKeys { get; set; }
 
     }
 }

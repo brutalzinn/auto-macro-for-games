@@ -333,20 +333,9 @@ namespace MouseKeyPlayback
                 Type = Constants.MOUSE,
                 Content = String.Format("{0} was triggered at ({1}, {2})", mEvent.Action, mEvent.Location.X, mEvent.Location.Y)
             };
-
+        
             AddRecordItem(item);
-            if (CheckBoxRandom.IsChecked.Value)
-            {
-                Record itemWait = new Record
-                {
-                    Id = count,
-                    WaitMaxMs = ApplicationSettingsManager.Settings.maxRamdomConfig,
-                    WaitMinMs =ApplicationSettingsManager.Settings.minRamdomConfig,
-                    Type = Constants.WAITRandom,
-                    Content = $"Wait {ApplicationSettingsManager.Settings.maxRamdomConfig} MAX Random ms. \n Wait {ApplicationSettingsManager.Settings.minRamdomConfig} Min Random ms "
-                };
-                AddRecordItem(itemWait);
-            }
+         
         }
    
             
@@ -376,6 +365,19 @@ namespace MouseKeyPlayback
             };
 
             AddRecordItem(item);
+            if (CheckBoxRandom.IsChecked.Value)
+            {
+                Record itemWait = new Record
+                {
+                    Id = count,
+
+                    WaitMaxMs = ApplicationSettingsManager.Settings.maxRamdomConfig,
+                    WaitMinMs = ApplicationSettingsManager.Settings.minRamdomConfig,
+                    Type = Constants.WAITRandom,
+                    Content = $"Wait {ApplicationSettingsManager.Settings.maxRamdomConfig} MAX Random ms. \n Wait {ApplicationSettingsManager.Settings.minRamdomConfig} Min Random ms "
+                };
+                AddRecordItem(itemWait);
+            }
         }
 
    
@@ -399,6 +401,7 @@ namespace MouseKeyPlayback
 
         private void AddRecordItem(Record item)
         {
+            
             TrackAutomationElement(item);
 
             AddToListView(item);
@@ -424,6 +427,9 @@ namespace MouseKeyPlayback
                                 this.listView.Items.RemoveAt(this.listView.Items.Count - 1);
                             break;
                         case Constants.KEYBOARD:
+                            break;
+                        case Constants.WAITRandom:
+                          
                             break;
                     }
                 }
@@ -540,9 +546,12 @@ namespace MouseKeyPlayback
 					int code = c;
 					var key = (Keys)Enum.Parse(typeof(Keys), code.ToString());
 					LogKeyboardEvents(new KeyboardEvent { Key = key, Action = Constants.KEY_DOWN });
-					LogKeyboardEvents(new KeyboardEvent { Key = key, Action = Constants.KEY_UP });
-				}				
-			}
+				
+                    LogKeyboardEvents(new KeyboardEvent { Key = key, Action = Constants.KEY_UP });
+               
+                }
+              
+            }
 		}
 
 		const int RDW_INVALIDATE = 0x0001;
@@ -681,6 +690,7 @@ namespace MouseKeyPlayback
 			{
 				window.keyboardEvents.ForEach(me => LogKeyboardEvents(me));
 			}
+
 		}
         private void DeleteItem(object sender, RoutedEventArgs e)
         {
