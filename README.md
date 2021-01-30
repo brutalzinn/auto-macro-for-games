@@ -7,5 +7,7 @@ This application is based on app recorder
 - Display information about UI element being clicked. (AutomationElement)
 - Automatically launch app from a specified path.
 - Global low-level hook for keyboard and mouse
+- Import and export recorded inputs
+- Random delay betweens keys or foreach keys
 
-Demo video: https://www.youtube.com/watch?v=a5JhQG6BGbc
+
