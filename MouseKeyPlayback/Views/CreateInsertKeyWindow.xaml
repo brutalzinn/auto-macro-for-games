@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MouseKeyPlayback.Views"
         mc:Ignorable="d"
-        Title="CreateInsertKeyWindow" Height="292" Width="300">
+        Title="CreateInsertKeyWindow" Height="292" Width="300" Loaded="Window_Loaded">
     <Grid>
         <Label Content="Insert a single key" HorizontalAlignment="Left" Margin="52,36,0,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
         <Label Content="Action" HorizontalAlignment="Left" Margin="52,77,0,0" VerticalAlignment="Top" Padding="0,5,5,5"/>

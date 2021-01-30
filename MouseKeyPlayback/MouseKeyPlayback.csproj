@@ -62,6 +62,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="InterfaceWindow.cs" />
     <Compile Include="Views\CreateInsertKeyWindow.xaml.cs">
       <DependentUpon>CreateInsertKeyWindow.xaml</DependentUpon>
     </Compile>

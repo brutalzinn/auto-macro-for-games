@@ -350,7 +350,9 @@ namespace MouseKeyPlayback
             AddRecordItem(item);
         }
 
-		private void LogWaitEvent(Record record)
+   
+
+        private void LogWaitEvent(Record record)
 		{
 			count++;
 			record.Id = count;
@@ -692,7 +694,35 @@ Move(-1);
             }
 
         }
+        private void LogKeyboardEventsUpdate(KeyboardEvent kEvent)
+        {
 
+            Record item = new Record
+            {
+                Id = count,
+                Type = Constants.KEYBOARD,
+                EventKey = kEvent,
+                Content = String.Format("{0} was {1}", kEvent.Key.ToString(),
+                  (kEvent.Action == Constants.KEY_DOWN) ? "pressed" : "released")
+            };
+            foreach (Record itemRecord in listView.Items)
+            {
+                if (itemRecord.Id == count)
+                {
+
+                    var itemListView = listView.SelectedItem as Record;
+                    int p = listView.SelectedIndex;
+
+                    listView.Items.RemoveAt(p);
+                    listView.Items.Insert(p, item);
+                    listView.SelectedItem = item;
+                    listView.Items.Refresh();
+                    break;
+                }
+
+            }
+
+        }
         private void Config(object sender, RoutedEventArgs e)
         {
             var item = listView.SelectedItem as Record;
@@ -702,15 +732,21 @@ Move(-1);
                    
                     break;
                 case Constants.KEYBOARD:
-                  
+                    CreateInsertKeyWindow keyboardwindow = new CreateInsertKeyWindow();
+                    keyboardwindow.keyboardConfig = item;
+                    keyboardwindow.ShowDialog();
+                    if (keyboardwindow.keyboardEvents != null)
+                    {
+                        keyboardwindow.keyboardEvents.ForEach(me => LogKeyboardEventsUpdate(me));
+                    }
                     break;
                 case Constants.WAIT:
                     CreateWaitWindow window = new CreateWaitWindow(); 
                     window.waitEvent = item;            
 
    window.ShowDialog();
- 
-               
+            
+
                     break;
                 case Constants.WAITRandom:
                     CreateWaitWindow windowRandom = new CreateWaitWindow();
@@ -719,7 +755,7 @@ Move(-1);
 
                     windowRandom.ShowDialog();
 
-                   
+                    
                     break;
 
 

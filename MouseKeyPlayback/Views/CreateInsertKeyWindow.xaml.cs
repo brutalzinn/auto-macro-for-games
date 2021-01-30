@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,9 +18,14 @@ namespace MouseKeyPlayback.Views
 	/// <summary>
 	/// Interaction logic for CreateInsertKeyWindow.xaml
 	/// </summary>
-	public partial class CreateInsertKeyWindow : Window
+	/// 
+
+	
+	public partial class CreateInsertKeyWindow : Window 
 	{
+		
 		public List<KeyboardEvent> keyboardEvents { get; set; }
+		public Record keyboardConfig { get; set; }
 
 		public CreateInsertKeyWindow()
 		{
@@ -857,5 +863,66 @@ namespace MouseKeyPlayback.Views
 			Up,
 			Down
 		}
-	}
+
+	
+		public void loadCbxKeyAction(string value)
+        {
+            foreach (KeyValuePair<KeyAction, string> item in cbxKeyAction.Items)
+            {
+            if(item.Value == value)
+                {
+					cbxKeyAction.SelectedItem = item;
+
+				}
+               
+
+            }
+        }
+		private void loadCbxKeyName(Key value)
+        {
+
+			foreach (Key name in cbxKeyName.Items)
+			{
+			if(name == value)
+                {
+
+					cbxKeyName.SelectedItem = name;
+                }
+			}
+		}
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+			if (keyboardConfig != null)
+			{
+
+				switch (keyboardConfig.EventKey.Action)
+                {
+					case Constants.KEY_UP:
+						loadCbxKeyAction("Up");
+							break;
+
+					case Constants.KEY_DOWN:
+						loadCbxKeyAction("Down");
+						break;
+				}
+				loadCbxKeyName((Key)keyboardConfig.EventKey.Key);
+
+				foreach (KeyValuePair<KeyAction, string> item in cbxKeyAction.Items)
+                {
+                    Debug.WriteLine("-----");
+                    Debug.WriteLine("Combobox value: " + item.Value);
+                    Debug.WriteLine("Keyboard config action : " + keyboardConfig.EventKey.Action);
+                    Debug.WriteLine("Combobox key: " + item.Key);
+                    Debug.WriteLine("Keyboard config key: " + keyboardConfig.EventKey.Key);
+
+                }
+
+
+
+
+            }
+		}
+    }
+
+
 }
