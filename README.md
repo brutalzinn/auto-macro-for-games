@@ -1,4 +1,5 @@
 ![alt text](https://github.com/brutalzinn/auto-macro-for-games/blob/master/App-recorder.png)
+
 This application is based on app recorder
 [App Recorder repository](https://github.com/mocmeo/app-recorder)
 
