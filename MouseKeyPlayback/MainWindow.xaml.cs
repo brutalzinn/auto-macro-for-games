@@ -694,6 +694,37 @@ Move(-1);
             }
 
         }
+        private void LogWaitEventUpdate(Record record)
+        {
+            
+            record.Id = count;
+            if(record.WaitMs > 0)
+            {
+                record.Content = $"Wait {record.WaitMs} MS";
+
+            }
+            else
+            {
+            record.Content = $"Wait {record.WaitMaxMs} MAX Random ms. \n Wait {record.WaitMinMs} Min Random ms ";
+
+            }
+            foreach (Record itemRecord in listView.Items)
+            {
+                if (itemRecord.Id == count)
+                {
+
+                    var itemListView = listView.SelectedItem as Record;
+                    int p = listView.SelectedIndex;
+
+                    listView.Items.RemoveAt(p);
+                    listView.Items.Insert(p, record);
+                    listView.SelectedItem = record;
+                    listView.Items.Refresh();
+                    break;
+                }
+
+            }
+        }
         private void LogKeyboardEventsUpdate(KeyboardEvent kEvent)
         {
 
@@ -742,10 +773,16 @@ Move(-1);
                     break;
                 case Constants.WAIT:
                     CreateWaitWindow window = new CreateWaitWindow(); 
-                    window.waitEvent = item;            
+                    window.waitEvent = item;  
+                    
 
    window.ShowDialog();
-            
+                    Record record = window.waitEvent;
+                    if (record != null)
+                    {
+                        LogWaitEventUpdate(record);
+                    }
+
 
                     break;
                 case Constants.WAITRandom:
@@ -754,8 +791,12 @@ Move(-1);
                 windowRandom.waitEvent = item; 
 
                     windowRandom.ShowDialog();
+                    Record recordRandom = windowRandom.waitEvent;
+                    if (recordRandom != null)
+                    {
+                        LogWaitEventUpdate(recordRandom);
+                    }
 
-                    
                     break;
 
 
