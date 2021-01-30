@@ -363,8 +363,6 @@ namespace MouseKeyPlayback
                 Content = String.Format("{0} was {1}", kEvent.Key.ToString(),
                     (kEvent.Action == Constants.KEY_DOWN) ? "pressed" : "released")
             };
-
-            AddRecordItem(item);
             if (CheckBoxRandom.IsChecked.Value)
             {
                 Record itemWait = new Record
@@ -376,7 +374,46 @@ namespace MouseKeyPlayback
                     Type = Constants.WAITRandom,
                     Content = $"Wait {ApplicationSettingsManager.Settings.maxRamdomConfig} MAX Random ms. \n Wait {ApplicationSettingsManager.Settings.minRamdomConfig} Min Random ms "
                 };
-                AddRecordItem(itemWait);
+                if (ApplicationSettingsManager.Settings.BetweenKeys)
+                {
+                    AddRecordItem(itemWait);
+                    AddRecordItem(item);
+
+                }
+                else if (ApplicationSettingsManager.Settings.ForeachKeys)
+                {
+                    AddRecordItem(item);
+                    AddRecordItem(itemWait);
+                }
+
+
+            }
+          
+        else if(CheckBoxDelay.IsChecked.Value)
+            {
+                Record itemWait = new Record
+                {
+                    Id = count,
+
+                    WaitMs = Convert.ToInt32(TextBoxDelayTime.Text),
+                    Type = Constants.WAIT,
+                    Content = $"Wait {Convert.ToInt32(TextBoxDelayTime.Text)} "
+                };
+                if (ApplicationSettingsManager.Settings.BetweenKeys)
+                {
+                    AddRecordItem(itemWait);
+                    AddRecordItem(item);
+
+                }
+                else if (ApplicationSettingsManager.Settings.ForeachKeys)
+                {
+                    AddRecordItem(item);
+                    AddRecordItem(itemWait);
+                }
+            }
+            else
+            {
+                AddRecordItem(item);
             }
         }
 
@@ -386,7 +423,7 @@ namespace MouseKeyPlayback
 		{
 			count++;
 			record.Id = count;
-            if (record.WaitMs > 0)
+            if (record.Type == Constants.WAIT)
             {
                 record.Content = $"Wait {record.WaitMs} MS";
 
@@ -752,7 +789,7 @@ Move(-1);
         {
             
             record.Id = count;
-            if(record.WaitMs > 0)
+            if(record.Type == Constants.WAIT)
             {
                 record.Content = $"Wait {record.WaitMs} MS";
 
@@ -914,6 +951,11 @@ this.recordList.Add(item);
             }
             listView.Items.Refresh();
 
+
+        }
+
+        private void ExportButton(object sender, RoutedEventArgs e)
+        {
 
         }
     }

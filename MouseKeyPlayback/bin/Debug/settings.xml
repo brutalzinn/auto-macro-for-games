@@ -4,5 +4,5 @@
   <maxRamdomConfig>400</maxRamdomConfig>
   <DefaultTimer>0</DefaultTimer>
   <BetweenKeys>true</BetweenKeys>
-  <ForeachKeys>true</ForeachKeys>
+  <ForeachKeys>false</ForeachKeys>
 </AppSettings>
