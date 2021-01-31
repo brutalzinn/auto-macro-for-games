@@ -1,4 +1,5 @@
 ﻿
+using MouseKeyPlayback.Library;
 using MouseKeyPlayback.Utils;
 using MouseKeyPlayback.Views;
 using System;
@@ -33,6 +34,7 @@ namespace MouseKeyPlayback
         public MainWindow()
         {
             InitializeComponent();
+            GlobalHotKey.RegisterHotKey("Ctrl + G", () => DoSomething());
             ApplicationSettingsManager.LoadSettings();
             recordList = new List<Record>();
             ((INotifyCollectionChanged)listView.Items).CollectionChanged += ListView_CollectionChanged;
@@ -960,6 +962,7 @@ this.recordList.Add(item);
 
 
             Microsoft.Win32.SaveFileDialog openFileDlg = new Microsoft.Win32.SaveFileDialog();
+            openFileDlg.Filter = "xml documents(.xml)| *.xml";
             // Launch OpenFileDialog by calling ShowDialog method
             Nullable<bool> result = openFileDlg.ShowDialog();
             // Get the selected file name and display in a TextBox.
@@ -978,6 +981,8 @@ this.recordList.Add(item);
         {
             Microsoft.Win32.OpenFileDialog openFileDlg = new Microsoft.Win32.OpenFileDialog();
             // Launch OpenFileDialog by calling ShowDialog method
+            openFileDlg.Filter = "xml documents(.xml)| *.xml";
+
             Nullable<bool> result = openFileDlg.ShowDialog();
             // Get the selected file name and display in a TextBox.
             // Load content of file in a TextBlock
@@ -988,7 +993,7 @@ this.recordList.Add(item);
                 
                 foreach(Record item in AppExportUtils.Settings.recordList)
                 {
-                    this.listView.Items.Add(item);
+                    AddRecordItem(item);
                 }
             }
         }

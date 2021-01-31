@@ -14,10 +14,13 @@
         <Label Content="Max" HorizontalAlignment="Left" Height="23" Margin="9,103,0,0" VerticalAlignment="Top" Width="43"/>
         <Button Content="Save" HorizontalAlignment="Left" Height="49" Margin="389,255,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
         <Button Content="Cancel" HorizontalAlignment="Left" Height="49" Margin="291,255,0,0" VerticalAlignment="Top" Width="83" Click="Button_Click_1"/>
-        <Label Content="Default time:" HorizontalAlignment="Left" Margin="14,162,0,0" VerticalAlignment="Top" Width="85"/>
-        <TextBox x:Name="TextBoxDefaultTimer" HorizontalAlignment="Left" Height="26" Margin="104,162,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="138"/>
+        <Label Content="Default time:" HorizontalAlignment="Left" Margin="14,144,0,0" VerticalAlignment="Top" Width="85"/>
+        <TextBox x:Name="TextBoxDefaultTimer" HorizontalAlignment="Left" Height="26" Margin="104,144,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="76"/>
         <CheckBox x:Name="CheckBoxRandomBetween" Content="Random Delay between Keys down and up" HorizontalAlignment="Center" Margin="221,71,0,0" VerticalAlignment="Top" Width="275" Height="21"/>
         <CheckBox x:Name="CheckBoxRandomForeach" Content="Random delay  foreach key" HorizontalAlignment="Left" Margin="226,111,0,0" VerticalAlignment="Top" Width="217" RenderTransformOrigin="0.64,0.867" Height="21"/>
+        <Button Content="HotKey for record" HorizontalAlignment="Left" Height="35" Margin="25,185,0,0" VerticalAlignment="Top" Width="133"/>
+        <Button Content="HotKey for stop record" HorizontalAlignment="Left" Height="35" Margin="25,225,0,0" VerticalAlignment="Top" Width="133"/>
+        <Button Content="HotKey for stop" HorizontalAlignment="Left" Height="35" Margin="25,265,0,0" VerticalAlignment="Top" Width="133"/>
 
     </Grid>
 </Window>
