@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MouseKeyPlayback.Views"
         mc:Ignorable="d"
-        Title="ConfigPage" Height="378.049" Width="525.61">
-    <Grid Margin="10,10,2,4">
+        Title="ConfigPage" Height="422.049" Width="525.61">
+    <Grid Margin="10,10,2,6">
         <Label Content="Random delay range config" HorizontalAlignment="Left" Margin="34,23,0,0" VerticalAlignment="Top" Height="28" Width="160"/>
         <TextBox x:Name ="RandomMinConfig" HorizontalAlignment="Left" Height="29" Margin="52,69,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="128"/>
         <TextBox x:Name ="RandomMaxConfig" HorizontalAlignment="Left" Height="29" Margin="52,103,0,0" TextWrapping="Wrap" Text="2000" VerticalAlignment="Top" Width="128"/>
@@ -14,13 +14,14 @@
         <Label Content="Max" HorizontalAlignment="Left" Height="23" Margin="9,103,0,0" VerticalAlignment="Top" Width="43"/>
         <Button Content="Save" HorizontalAlignment="Left" Height="49" Margin="389,255,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
         <Button Content="Cancel" HorizontalAlignment="Left" Height="49" Margin="291,255,0,0" VerticalAlignment="Top" Width="83" Click="Button_Click_1"/>
-        <Label Content="Default time:" HorizontalAlignment="Left" Margin="14,144,0,0" VerticalAlignment="Top" Width="85"/>
-        <TextBox x:Name="TextBoxDefaultTimer" HorizontalAlignment="Left" Height="26" Margin="104,144,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="76"/>
+        <Label Content="Default time:" HorizontalAlignment="Left" Margin="14,137,0,0" VerticalAlignment="Top" Width="85"/>
+        <TextBox x:Name="TextBoxDefaultTimer" HorizontalAlignment="Left" Height="26" Margin="104,137,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="76" RenderTransformOrigin="0.5,0.5"/>
         <CheckBox x:Name="CheckBoxRandomBetween" Content="Random Delay between Keys down and up" HorizontalAlignment="Center" Margin="221,71,0,0" VerticalAlignment="Top" Width="275" Height="21"/>
         <CheckBox x:Name="CheckBoxRandomForeach" Content="Random delay  foreach key" HorizontalAlignment="Left" Margin="226,111,0,0" VerticalAlignment="Top" Width="217" RenderTransformOrigin="0.64,0.867" Height="21"/>
-        <Button Content="HotKey for record" HorizontalAlignment="Left" Height="35" Margin="25,185,0,0" VerticalAlignment="Top" Width="133"/>
-        <Button Content="HotKey for stop record" HorizontalAlignment="Left" Height="35" Margin="25,225,0,0" VerticalAlignment="Top" Width="133"/>
-        <Button Content="HotKey for stop" HorizontalAlignment="Left" Height="35" Margin="25,265,0,0" VerticalAlignment="Top" Width="133"/>
+        <Button Content="HotKey for start record" HorizontalAlignment="Left" Height="35" Margin="14,175,0,0" VerticalAlignment="Top" Width="133" Click="Button_Click_2"/>
+        <Button Content="HotKey for stop record" HorizontalAlignment="Left" Height="35" Margin="14,215,0,0" VerticalAlignment="Top" Width="133" Click="Button_Click_3"/>
+        <Button Content="HotKey for play" HorizontalAlignment="Left" Height="35" Margin="14,255,0,0" VerticalAlignment="Top" Width="133" Click="Button_Click_4"/>
+        <Button Content="HotKey for stop macro" HorizontalAlignment="Left" Height="35" Margin="14,295,0,0" VerticalAlignment="Top" Width="133" Click="HotKeyStopMacro"/>
 
     </Grid>
 </Window>
