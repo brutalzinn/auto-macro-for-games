@@ -7,8 +7,11 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Automation;
@@ -653,8 +656,36 @@ namespace MouseKeyPlayback
 				window.mouseEvents.ForEach(me => LogMouseEvents(me));
 			}
 		}
+        public enum EspecialChar {
 
-		private void BtnCreateText_Click(object sender, RoutedEventArgs e)
+        É =  Keys.OemOpenBrackets,
+        Ã = Keys.OemSemicolon,
+        È = Keys.OemOpenBrackets,
+        Õ = Keys.OemOpenBrackets,
+        Ó = Keys.OemOpenBrackets,
+        Ò = Keys.OemOpenBrackets
+
+
+
+
+        }
+        static string RemoveDiacritics(string text)
+        {
+            var normalizedString = text.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+        }
+        private void BtnCreateText_Click(object sender, RoutedEventArgs e)
 		{
 			var window = new CreateManualTypeKeyWindow();
 			window.ShowDialog();
@@ -665,8 +696,32 @@ namespace MouseKeyPlayback
 				text = text.ToUpper();
 				foreach(char c in text)
 				{
-					int code = c;
-					var key = (Keys)Enum.Parse(typeof(Keys), code.ToString());
+					var code = c;
+                    Keys key = Keys.None;
+                    try
+                    {
+					 key = (Keys)Enum.Parse(typeof(Keys), code.ToString());
+
+                    }
+                    catch (Exception )
+                    {
+                        if (code != ' ')
+                        {                               
+                            Debug.WriteLine("REGEX:" + RemoveDiacritics(code.ToString()));
+
+                            Keys key_especial = (Keys)Enum.Parse(typeof(EspecialChar), code.ToString());
+                            key = (Keys)Enum.Parse(typeof(Keys), RemoveDiacritics(code.ToString()));
+                            LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = Constants.KEY_DOWN });
+
+                            LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = Constants.KEY_UP });
+
+                        }
+                        else
+                        {
+                            key = Keys.Space;
+
+                        }
+                    }
 					LogKeyboardEvents(new KeyboardEvent { Key = key, Action = Constants.KEY_DOWN });
 				
                     LogKeyboardEvents(new KeyboardEvent { Key = key, Action = Constants.KEY_UP });
