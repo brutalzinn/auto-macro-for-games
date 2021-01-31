@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
@@ -30,12 +32,13 @@ namespace MouseKeyPlayback
         #endregion
 
         private volatile bool m_StopThread = false;
-
+        private bool NeedExit { get; set; } = false;
         public MainWindow()
         {
             InitializeComponent();
-            GlobalHotKey.RegisterHotKey("Ctrl + G", () => DoSomething());
+            Globals.MainWindow = this;
             ApplicationSettingsManager.LoadSettings();
+            RegisterHotKeys();
             recordList = new List<Record>();
             ((INotifyCollectionChanged)listView.Items).CollectionChanged += ListView_CollectionChanged;
 
@@ -80,7 +83,36 @@ namespace MouseKeyPlayback
             base.OnClosed(e);
             m_StopThread = true;
         }
+        public void RegisterHotKeys()
+        {
+            if(ApplicationSettingsManager.Settings.HotKeyStartRecord != null)
+            {
+            GlobalHotKey.RegisterHotKey(ApplicationSettingsManager.Settings.HotKeyStartRecord, StartRecord);
 
+            }
+            if (ApplicationSettingsManager.Settings.HotKeyStopRecord != null)
+            {
+                GlobalHotKey.RegisterHotKey(ApplicationSettingsManager.Settings.HotKeyStopRecord, StopRecord);
+
+            }
+            if (ApplicationSettingsManager.Settings.HotKeyPlay != null)
+            {
+                GlobalHotKey.RegisterHotKey(ApplicationSettingsManager.Settings.HotKeyPlay, Play);
+
+            }
+            if (ApplicationSettingsManager.Settings.HotKeyStopMacro != null)
+            {
+                GlobalHotKey.RegisterHotKey(ApplicationSettingsManager.Settings.HotKeyStartRecord, StopMacro);
+
+            }
+        }
+        private void StopMacro()
+        {
+            keyboardHook.Uninstall();
+            mouseHook.Uninstall();
+            isHooked = false;
+            NeedExit = true;
+        }
         private void ListView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             // Scroll to the last item
@@ -161,7 +193,8 @@ namespace MouseKeyPlayback
         #endregion
 
         #region Record/Stop
-        private void BtnRecord_Click(object sender, RoutedEventArgs e)
+
+        private void StartRecord()
         {
             if (isHooked)
                 return;
@@ -193,12 +226,19 @@ namespace MouseKeyPlayback
 
             LaunchApp();
         }
-
-        private void BtnStop_Click(object sender, RoutedEventArgs e)
+        private void BtnRecord_Click(object sender, RoutedEventArgs e)
+        {
+            StartRecord();
+        }
+        private void StopRecord()
         {
             keyboardHook.Uninstall();
             mouseHook.Uninstall();
             isHooked = false;
+        }
+        private void BtnStop_Click(object sender, RoutedEventArgs e)
+        {
+            StopRecord();
         }
         #endregion
 
@@ -450,6 +490,31 @@ namespace MouseKeyPlayback
             countRecord.Content = String.Format("{0} records", count.ToString());
         }
 
+        private void RemoveRecordItem(Record item)
+        {
+
+        
+           
+                switch (item.Type)
+                {
+                    case Constants.MOUSE:
+                        Debug.WriteLine(item.EventMouse.Value);
+                   
+                       
+                         recordList.RemoveAll(x => x.Group == item.Group);
+
+                        break;
+                    case Constants.KEYBOARD:
+                        break;
+                    case Constants.WAITRandom:
+
+                        break;
+                }
+            
+
+            countRecord.Content = String.Format("{0} records", count.ToString());
+        }
+     
         private void AddToListView(Record item)
         {
             // Check if two last records are similar
@@ -464,7 +529,9 @@ namespace MouseKeyPlayback
                             var lastAction = lastItem.EventMouse.Action;
                             if (lastAction == MouseHook.MouseEvents.MouseMove
                                 && item.EventMouse.Action == lastAction)
+                                
                                 this.listView.Items.RemoveAt(this.listView.Items.Count - 1);
+                            item.Group = this.listView.Items.Count - 1;
                             break;
                         case Constants.KEYBOARD:
                             break;
@@ -481,18 +548,23 @@ namespace MouseKeyPlayback
         #endregion
 
         #region Playback
-        private void BtnPlayback_Click(object sender, RoutedEventArgs e)
+        private void Play()
         {
             if (isHooked)
                 return;
 
             int num;
-            if (int.TryParse(repeatTime.Text, out num)) {
-                for (int i = 0; i < num; ++i) {
+            if (int.TryParse(repeatTime.Text, out num))
+            {
+                for (int i = 0; i < num; ++i)
+                {
                     LaunchApp();
-
-                    foreach (var record in recordList) {
-                        switch (record.Type) {
+                  
+                    foreach (var record in recordList)
+                    {
+                       
+                        switch (record.Type)
+                        {
                             case Constants.MOUSE:
                                 PlaybackMouse(record);
                                 break;
@@ -505,22 +577,30 @@ namespace MouseKeyPlayback
 
                             case Constants.WAITRandom:
                                 Random number = new Random();
-                             
-                               
+
+
                                 Thread.Sleep(number.Next(record.WaitMinMs, record.WaitMaxMs));
                                 break;
                             default:
                                 break;
                         }
+                      
                         Thread.Sleep(4);
                     }
 
                     Thread.Sleep(10);
                 }
-            } else {
+            }
+            else
+            {
                 System.Windows.MessageBox.Show("Repeat time is not valid!");
             }
-            
+           
+
+        }
+        private void BtnPlayback_Click(object sender, RoutedEventArgs e)
+        {
+            Play();
         }
 
         private void PlaybackMouse(Record record)
@@ -738,8 +818,7 @@ namespace MouseKeyPlayback
           
             try
             {
-                listView.Items.Remove(item);
-                listView.Items.Refresh() ;
+                RemoveRecordItem(item);
 
             }
             catch (Exception ex)
@@ -946,14 +1025,8 @@ Move(-1);
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            this.recordList.Clear();
-            foreach(Record item in listView.Items)
-            {
-this.recordList.Add(item);
 
-            }
-            listView.Items.Refresh();
-
+            this.listView.Items.Refresh();
 
         }
 

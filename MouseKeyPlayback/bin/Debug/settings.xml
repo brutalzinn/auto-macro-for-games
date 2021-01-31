@@ -5,4 +5,8 @@
   <DefaultTimer>0</DefaultTimer>
   <BetweenKeys>true</BetweenKeys>
   <ForeachKeys>false</ForeachKeys>
+  <HotKeyStartRecord>Control + Q</HotKeyStartRecord>
+  <HotKeyStopRecord>Control + G</HotKeyStopRecord>
+  <HotKeyPlay>Control + Z</HotKeyPlay>
+  <HotKeyStopMacro>Control + H</HotKeyStopMacro>
 </AppSettings>

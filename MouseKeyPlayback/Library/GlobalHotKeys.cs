@@ -9,6 +9,7 @@ namespace MouseKeyPlayback.Library
     using System;
     using System.Collections.Generic;
     using System.Runtime.InteropServices;
+    using System.Threading;
     using System.Windows.Input;
 
     public class GlobalHotKey : IDisposable
@@ -78,6 +79,7 @@ namespace MouseKeyPlayback.Library
                 {
                     if (e.Modifier == x.Modifier && e.Key == x.Key)
                     {
+                        Thread.Sleep(1000);
                         x.Action();
                     }
                 });
