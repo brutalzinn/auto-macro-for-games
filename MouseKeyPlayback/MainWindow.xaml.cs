@@ -505,10 +505,12 @@ namespace MouseKeyPlayback
 
                         break;
                     case Constants.KEYBOARD:
+                    recordList.Remove(item);
                         break;
                     case Constants.WAITRandom:
+                    recordList.Remove(item);
 
-                        break;
+                    break;
                 }
             
 
@@ -818,6 +820,7 @@ namespace MouseKeyPlayback
           
             try
             {
+                this.listView.Items.Remove(item);
                 RemoveRecordItem(item);
 
             }
