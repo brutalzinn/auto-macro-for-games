@@ -1,4 +1,4 @@
-# App Recorder
+![alt text](https://github.com/brutalzinn/auto-macro-for-games/blob/master/App-recorder.png)
 
 This application is based on app recorder
 [App Recorder repository](https://github.com/mocmeo/app-recorder)
@@ -7,5 +7,7 @@ This application is based on app recorder
 - Display information about UI element being clicked. (AutomationElement)
 - Automatically launch app from a specified path.
 - Global low-level hook for keyboard and mouse
+- Import and export recorded inputs
+- Random delay betweens keys or foreach keys
 
-Demo video: https://www.youtube.com/watch?v=a5JhQG6BGbc
+
