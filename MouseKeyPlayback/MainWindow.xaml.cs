@@ -42,6 +42,7 @@ namespace MouseKeyPlayback
             Globals.MainWindow = this;
             ApplicationSettingsManager.LoadSettings();
             RegisterHotKeys();
+            RegisterSpecialKeys();
             recordList = new List<Record>();
             ((INotifyCollectionChanged)listView.Items).CollectionChanged += ListView_CollectionChanged;
 
@@ -656,14 +657,29 @@ namespace MouseKeyPlayback
 				window.mouseEvents.ForEach(me => LogMouseEvents(me));
 			}
 		}
-        public enum EspecialChar {
+        public static Dictionary<char, Keys> specialkeys = new Dictionary<char, Keys>();
+        
+        private void RegisterSpecialKeys()
+        {
 
-        É =  Keys.OemOpenBrackets,
-        Ã = Keys.OemSemicolon,
-        È = Keys.OemOpenBrackets,
-        Õ = Keys.OemOpenBrackets,
-        Ó = Keys.OemOpenBrackets,
-        Ò = Keys.OemOpenBrackets
+            specialkeys.Add('Á', Keys.OemOpenBrackets);
+            specialkeys.Add('Ó', Keys.OemOpenBrackets);
+            specialkeys.Add('É', Keys.OemOpenBrackets);
+
+            specialkeys.Add(';', Keys.OemSemicolon);
+            specialkeys.Add('Ã', Keys.Oem7);
+            specialkeys.Add('Ñ', Keys.Oem7);
+            specialkeys.Add(' ', Keys.Space);
+            specialkeys.Add('+', Keys.Oemplus);
+            specialkeys.Add('?', Keys.Oemtilde);
+            specialkeys.Add('\'', Keys.OemQuotes);
+            specialkeys.Add('"', Keys.OemQuotes);
+            specialkeys.Add('|', Keys.OemPipe);
+            specialkeys.Add('.', Keys.OemPeriod);
+            specialkeys.Add(',', Keys.Oemcomma);
+            specialkeys.Add('Õ', Keys.Oem7);
+
+
 
 
 
@@ -685,6 +701,19 @@ namespace MouseKeyPlayback
 
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
+        private static Keys getKeySpecial(char value)
+        {
+            Keys result = Keys.None;
+            foreach(var item in specialkeys)
+            {
+                if(item.Key == value)
+                {
+                    result = item.Value;
+                }
+               
+            }
+            return result;
+        }
         private void BtnCreateText_Click(object sender, RoutedEventArgs e)
 		{
 			var window = new CreateManualTypeKeyWindow();
@@ -705,23 +734,24 @@ namespace MouseKeyPlayback
                     }
                     catch (Exception )
                     {
-                        if (code != ' ')
-                        {                               
-                            Debug.WriteLine("REGEX:" + RemoveDiacritics(code.ToString()));
 
-                            Keys key_especial = (Keys)Enum.Parse(typeof(EspecialChar), code.ToString());
-                            key = (Keys)Enum.Parse(typeof(Keys), RemoveDiacritics(code.ToString()));
-                            LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = Constants.KEY_DOWN });
+                        Debug.WriteLine("code:" + code + "key: " + getKeySpecial(code));
+                            Keys key_especial = getKeySpecial(code);
+                        var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(code);
+                        if(unicodeCategory != UnicodeCategory.OtherPunctuation)
+                        {
+                        key = (Keys)Enum.Parse(typeof(Keys), RemoveDiacritics(code.ToString()));
+
+                        }
+LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = Constants.KEY_DOWN });
 
                             LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = Constants.KEY_UP });
 
-                        }
-                        else
-                        {
-                            key = Keys.Space;
-
-                        }
                     }
+                            
+                        
+                    
+                    
 					LogKeyboardEvents(new KeyboardEvent { Key = key, Action = Constants.KEY_DOWN });
 				
                     LogKeyboardEvents(new KeyboardEvent { Key = key, Action = Constants.KEY_UP });

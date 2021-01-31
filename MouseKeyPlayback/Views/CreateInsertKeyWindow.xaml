@@ -5,16 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MouseKeyPlayback.Views"
         mc:Ignorable="d"
-        Title="CreateInsertKeyWindow" Height="292" Width="300" Loaded="Window_Loaded">
-    <Grid>
+        Title="CreateInsertKeyWindow" Height="386.95" Width="300" Loaded="Window_Loaded">
+    <Grid Margin="0,0,0,17">
         <Label Content="Insert a single key" HorizontalAlignment="Left" Margin="52,36,0,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
         <Label Content="Action" HorizontalAlignment="Left" Margin="52,77,0,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
-        <Label Content="Key" HorizontalAlignment="Left" Margin="52,142,0,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
+        <Label Content="Key" HorizontalAlignment="Left" Margin="53,132,0,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
         <ComboBox x:Name="cbxKeyAction" Margin="0,103,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Width="190" Initialized="CbxKeyAction_Initialized" SelectedIndex="0" DisplayMemberPath="Value"/>
-        <ComboBox x:Name="cbxKeyName" HorizontalAlignment="Center" Margin="0,168,0,0" VerticalAlignment="Top" Width="190" Initialized="CbxKeyName_Initialized" SelectedIndex="0"/>
-        <Button x:Name="btnOk" Content="OK" HorizontalAlignment="Right" Margin="0,0,124.6,25.4" VerticalAlignment="Bottom" Width="60" Click="BtnOk_Click"/>
-        <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Right" Margin="0,0,51.6,25.4" VerticalAlignment="Bottom" Width="60
+        <ComboBox x:Name="cbxKeyName" HorizontalAlignment="Center" Margin="52,158,50,0" VerticalAlignment="Top" Width="190" Initialized="CbxKeyName_Initialized" SelectedIndex="0"/>
+        <Button x:Name="btnOk" Content="OK" HorizontalAlignment="Right" Margin="0,0,58,20" VerticalAlignment="Bottom" Width="60" Click="BtnOk_Click"/>
+        <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Right" Margin="0,0,140,20" VerticalAlignment="Bottom" Width="60
                 " Click="BtnCancel_Click"/>
+        <Button Content="Capture keys" HorizontalAlignment="Left" Height="22" Margin="52,260,0,0" VerticalAlignment="Top" Width="95" Click="Button_Click"/>
+        <Label x:Name="Labelcapturedkeys" Content="Label" HorizontalAlignment="Left" Height="63" Margin="70,192,0,0" VerticalAlignment="Top" Width="179"/>
+        <Button Content="Stop Capture" HorizontalAlignment="Left" Height="22" Margin="164,260,0,0" VerticalAlignment="Top" Width="94" Click="StopCapture"/>
 
     </Grid>
 </Window>
