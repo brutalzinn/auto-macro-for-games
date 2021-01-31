@@ -28,6 +28,7 @@ namespace MouseKeyPlayback.Views
 		public List<KeyboardEvent> keyboardEvents { get; set; }
 		public Record keyboardConfig { get; set; }
 		private KeyboardHook keyboardHook = new KeyboardHook();
+		public Keys CapturedKeys { get; set; } = Keys.None;
 
 		public CreateInsertKeyWindow()
 		{
@@ -45,10 +46,8 @@ namespace MouseKeyPlayback.Views
 
 			this.Close();
 		}
-
-		private void BtnOk_Click(object sender, RoutedEventArgs e)
-		{
-
+		private void SaveRecordWithOK()
+        {
 			var pair = (KeyValuePair<KeyAction, string>)cbxKeyAction.SelectedItem;
 			var keyAction = pair.Key;
 			var keyName = (Key)cbxKeyName.SelectedItem;
@@ -91,6 +90,63 @@ namespace MouseKeyPlayback.Views
 					};
 					break;
 			}
+		}
+		private void SaveRecordWithKeyPress()
+		{
+			
+			var pair = (KeyValuePair<KeyAction, string>)cbxKeyAction.SelectedItem;
+			var keyAction = pair.Key;
+	
+			switch (keyAction)
+			{
+				case KeyAction.PressRelease:
+					keyboardEvents = new List<KeyboardEvent>
+					{
+						new KeyboardEvent
+						{
+							Key = CapturedKeys,
+							Action = Constants.KEY_DOWN
+						},
+						new KeyboardEvent
+						{
+							Key = CapturedKeys,
+							Action = Constants.KEY_UP
+						}
+					};
+break;
+				case KeyAction.Down:
+					keyboardEvents = new List<KeyboardEvent>
+					{
+						new KeyboardEvent
+						{
+							Key = CapturedKeys,
+							Action = Constants.KEY_DOWN
+						}
+					};
+break;
+				case KeyAction.Up:
+					keyboardEvents = new List<KeyboardEvent>
+					{
+						new KeyboardEvent
+						{
+							Key = CapturedKeys,
+							Action = Constants.KEY_UP
+						}
+					};
+break;
+			}
+        }
+		private void BtnOk_Click(object sender, RoutedEventArgs e)
+		{
+			if(CapturedKeys != Keys.None)
+            {
+				SaveRecordWithKeyPress();
+            }
+            else
+            {
+				SaveRecordWithOK();
+            }
+			
 			StopCapture();
 			this.Close();
 		}
@@ -758,7 +814,7 @@ namespace MouseKeyPlayback.Views
 		//
 		// Summary:
 		//     The OEM 3 key.
-		//Oem3 = 192,
+		Oem3 = 192,
 		//
 		// Summary:
 		//     The OEM open bracket key on a US standard keyboard (Windows 2000 or later).
@@ -943,8 +999,9 @@ namespace MouseKeyPlayback.Views
 
 			}
 			loadCbxKeyAction(kEvent.Action);
+			CapturedKeys = kEvent.Key;
 
-		
+
 			Labelcapturedkeys.Content = $"key: {kEvent.Key.ToString()} \n action: {kEvent.Action.ToString()} ";
 			
 			 
