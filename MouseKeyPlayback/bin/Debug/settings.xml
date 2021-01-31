@@ -7,6 +7,6 @@
   <ForeachKeys>false</ForeachKeys>
   <HotKeyStartRecord>Control + Q</HotKeyStartRecord>
   <HotKeyStopRecord>Control + G</HotKeyStopRecord>
-  <HotKeyPlay>Control + Z</HotKeyPlay>
-  <HotKeyStopMacro>Control + H</HotKeyStopMacro>
+  <HotKeyPlay>Control + J</HotKeyPlay>
+  <HotKeyStopMacro>Control + J</HotKeyStopMacro>
 </AppSettings>

@@ -847,7 +847,9 @@ namespace MouseKeyPlayback
             int p = listView.SelectedIndex;
 
             listView.Items.RemoveAt(p);
+            recordList.Remove(item);
             listView.Items.Insert(p + shift, item);
+            recordList.Insert(p + shift, item);
             listView.SelectedItem = item;
         }
         private void ToUpItem(object sender, RoutedEventArgs e)
