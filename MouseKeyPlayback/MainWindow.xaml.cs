@@ -738,7 +738,7 @@ namespace MouseKeyPlayback
                         Debug.WriteLine("code:" + code + "key: " + getKeySpecial(code));
                             Keys key_especial = getKeySpecial(code);
                         var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(code);
-                        if(unicodeCategory != UnicodeCategory.OtherPunctuation)
+                        if(unicodeCategory != UnicodeCategory.OtherPunctuation && unicodeCategory != UnicodeCategory.SpaceSeparator)
                         {
                         key = (Keys)Enum.Parse(typeof(Keys), RemoveDiacritics(code.ToString()));
 
@@ -899,19 +899,36 @@ LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = Constants.KEY
 			}
 
 		}
+        T[] InitializeArray<T>(int length) where T : new()
+        {
+            T[] array = new T[length];
+            for (int i = 0; i < length; ++i)
+            {
+                array[i] = new T();
+            }
+
+            return array;
+        }
         private void DeleteItem(object sender, RoutedEventArgs e)
         {
-            var item = listView.SelectedItem as Record;
-          
-            try
-            {
-                this.listView.Items.Remove(item);
-                RemoveRecordItem(item);
+          var itemall = listView.SelectedItems;
+            Record[] cache = InitializeArray<Record>(itemall.Count);
+           
+                itemall.CopyTo(cache, 0);
+            
+  
+        for(int i =0;i < cache.Count(); i++) { 
+                try
+                {
+                    var item = (Record)cache[i];
+                    this.listView.Items.Remove(item);
+                    RemoveRecordItem(item);
 
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
             }
         }
 
