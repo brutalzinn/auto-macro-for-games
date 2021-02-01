@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -26,6 +27,8 @@ namespace MouseKeyPlayback.Views
 		
 		public List<KeyboardEvent> keyboardEvents { get; set; }
 		public Record keyboardConfig { get; set; }
+		private KeyboardHook keyboardHook = new KeyboardHook();
+		public Keys CapturedKeys { get; set; } = Keys.None;
 
 		public CreateInsertKeyWindow()
 		{
@@ -39,11 +42,12 @@ namespace MouseKeyPlayback.Views
 
 		private void BtnCancel_Click(object sender, RoutedEventArgs e)
 		{
+			StopCapture();
+
 			this.Close();
 		}
-
-		private void BtnOk_Click(object sender, RoutedEventArgs e)
-		{
+		private void SaveRecordWithOK()
+        {
 			var pair = (KeyValuePair<KeyAction, string>)cbxKeyAction.SelectedItem;
 			var keyAction = pair.Key;
 			var keyName = (Key)cbxKeyName.SelectedItem;
@@ -86,9 +90,70 @@ namespace MouseKeyPlayback.Views
 					};
 					break;
 			}
+		}
+		private void SaveRecordWithKeyPress()
+		{
+			
+			var pair = (KeyValuePair<KeyAction, string>)cbxKeyAction.SelectedItem;
+			var keyAction = pair.Key;
+	
+			switch (keyAction)
+			{
+				case KeyAction.PressRelease:
+					keyboardEvents = new List<KeyboardEvent>
+					{
+						new KeyboardEvent
+						{
+							Key = CapturedKeys,
+							Action = Constants.KEY_DOWN
+						},
+						new KeyboardEvent
+						{
+							Key = CapturedKeys,
+							Action = Constants.KEY_UP
+						}
+					};
+break;
+				case KeyAction.Down:
+					keyboardEvents = new List<KeyboardEvent>
+					{
+						new KeyboardEvent
+						{
+							Key = CapturedKeys,
+							Action = Constants.KEY_DOWN
+						}
+					};
+break;
+				case KeyAction.Up:
+					keyboardEvents = new List<KeyboardEvent>
+					{
+						new KeyboardEvent
+						{
+							Key = CapturedKeys,
+							Action = Constants.KEY_UP
+						}
+					};
+break;
+			}
+        }
+		private void BtnOk_Click(object sender, RoutedEventArgs e)
+		{
+			if(CapturedKeys != Keys.None)
+            {
+				SaveRecordWithKeyPress();
+            }
+            else
+            {
+				SaveRecordWithOK();
+            }
+			
+			StopCapture();
 			this.Close();
 		}
-
+		private void StopCapture()
+        {
+			keyboardHook.Uninstall();
+		}
 		private void CbxKeyAction_Initialized(object sender, EventArgs e)
 		{
 			List<KeyValuePair<KeyAction, string>> keyAction = new List<KeyValuePair<KeyAction, string>>
@@ -105,6 +170,7 @@ namespace MouseKeyPlayback.Views
 			foreach (Key name in Enum.GetValues(typeof(Key)))
 			{										
 				cbxKeyName.Items.Add(name);
+				Debug.WriteLine(name);
 			}
 		}
 		enum Key
@@ -747,7 +813,7 @@ namespace MouseKeyPlayback.Views
 		Oemtilde = 192,
 		//
 		// Summary:
-		//     The OEM 3 key.
+		//     The OEM 3 key. 
 		Oem3 = 192,
 		//
 		// Summary:
@@ -907,22 +973,52 @@ namespace MouseKeyPlayback.Views
 				}
 				loadCbxKeyName((Key)keyboardConfig.EventKey.Key);
 
-				foreach (KeyValuePair<KeyAction, string> item in cbxKeyAction.Items)
-                {
-                    Debug.WriteLine("-----");
-                    Debug.WriteLine("Combobox value: " + item.Value);
-                    Debug.WriteLine("Keyboard config action : " + keyboardConfig.EventKey.Action);
-                    Debug.WriteLine("Combobox key: " + item.Key);
-                    Debug.WriteLine("Keyboard config key: " + keyboardConfig.EventKey.Key);
-
-                }
-
-
-
-
             }
 		}
-    }
+		private bool KeyboardHook_OnKeyboardEvent(uint key, BaseHook.KeyState keyState)
+		{
+			KeyboardEvent kEvent = new KeyboardEvent
+			{
+				Key = (Keys)key,
+				Action = (keyState == BaseHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
+			};
+			LogKeyboardEvents(kEvent);
+			return false;
+		}
+		private void LogKeyboardEvents(KeyboardEvent kEvent)
+		{
+			string[] array = kEvent.Key.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+		if(array.Count() > 1)
+			{
+			loadCbxKeyName((Key)Enum.Parse(typeof(Key), array[1]));
+            }
+            else
+            {
+				loadCbxKeyName((Key)Enum.Parse(typeof(Key), array[0]));
+
+
+			}
+			loadCbxKeyAction(kEvent.Action);
+			CapturedKeys = kEvent.Key;
+
+
+			Labelcapturedkeys.Content = $"key: {kEvent.Key.ToString()} \n action: {kEvent.Action.ToString()} ";
+			
+			 
+		
+		}
+		private void Button_Click(object sender, RoutedEventArgs e)
+        {
+			keyboardHook.Install();
+			keyboardHook.OnKeyboardEvent += KeyboardHook_OnKeyboardEvent;
+
+		}
+
+        private void StopCapture(object sender, RoutedEventArgs e)
+        {
+			StopCapture();
+		}
+	}
 
 
 }

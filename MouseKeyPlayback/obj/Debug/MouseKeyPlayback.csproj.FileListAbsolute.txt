@@ -110,3 +110,4 @@ C:\Users\rober\Desktop\app-recorder-master\app-recorder-master\MouseKeyPlayback\
 C:\Users\rober\Desktop\app-recorder-master\app-recorder-master\MouseKeyPlayback\obj\Debug\MouseKeyPlayback.exe
 C:\Users\rober\Desktop\app-recorder-master\app-recorder-master\MouseKeyPlayback\obj\Debug\MouseKeyPlayback.pdb
 C:\Users\rober\Desktop\app-recorder-master\app-recorder-master\MouseKeyPlayback\obj\Debug\MouseKeyPlayback.csprojAssemblyReference.cache
+C:\Users\carlo\Documents\My Projects\auto-macro-for-games\MouseKeyPlayback\obj\Debug\MouseKeyPlayback.Views.KeyInfoHelper.resources

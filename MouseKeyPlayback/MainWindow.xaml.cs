@@ -28,20 +28,26 @@ namespace MouseKeyPlayback
     {
         #region Private Properties
         private KeyboardHook keyboardHook = new KeyboardHook();
+        private KeyboardHook keyboardHookShots = new KeyboardHook();
+
         private MouseHook mouseHook = new MouseHook();
         private int count = 0;
         private bool isHooked = false;
+        private bool StopMacro = false;
         private List<Record> recordList;
         #endregion
 
         private volatile bool m_StopThread = false;
         private bool NeedExit { get; set; } = false;
+        public Keys keyStopMacro { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
             Globals.MainWindow = this;
             ApplicationSettingsManager.LoadSettings();
             RegisterHotKeys();
+            RegisterSpecialKeys();
             recordList = new List<Record>();
             ((INotifyCollectionChanged)listView.Items).CollectionChanged += ListView_CollectionChanged;
 
@@ -103,18 +109,15 @@ namespace MouseKeyPlayback
                 GlobalHotKey.RegisterHotKey(ApplicationSettingsManager.Settings.HotKeyPlay, Play);
 
             }
-            if (ApplicationSettingsManager.Settings.HotKeyStopMacro != null)
-            {
-                GlobalHotKey.RegisterHotKey(ApplicationSettingsManager.Settings.HotKeyStartRecord, StopMacro);
-
-            }
+            
+         keyStopMacro =   (Keys)Enum.Parse(typeof(Keys), ApplicationSettingsManager.Settings.HotKeyStopMacro, true);
         }
-        private void StopMacro()
+        private void StopMacroKey()
         {
-            keyboardHook.Uninstall();
-            mouseHook.Uninstall();
-            isHooked = false;
-            NeedExit = true;
+    
+         
+            StopMacro = true;  
+         
         }
         private void ListView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -137,7 +140,7 @@ namespace MouseKeyPlayback
             //mouseHook.OnMouseWheelEvent += MouseHook_OnMouseWheelEvent;
             //mouseHook.Install();
             keyboardHook.OnKeyboardEvent += KeyboardHook_OnKeyboardEvent;
-
+            keyboardHookShots.OnKeyboardEvent += KeyboardHookShotups_OnKeyboardEvent;
             mouseHook.OnMouseEvent += MouseHook_OnMouseEvent;
             mouseHook.OnMouseMove += MouseHook_OnMouseMove;
             mouseHook.OnMouseWheelEvent += MouseHook_OnMouseWheelEvent;
@@ -191,6 +194,20 @@ namespace MouseKeyPlayback
                 Action = (keyState == BaseHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
             };
             LogKeyboardEvents(kEvent);
+            return false;
+        }
+        private bool KeyboardHookShotups_OnKeyboardEvent(uint key, BaseHook.KeyState keyState)
+        {
+            KeyboardEvent kEvent = new KeyboardEvent
+            {
+                Key = (Keys)key,
+                Action = (keyState == BaseHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
+            };
+
+            if (kEvent.Key == keyStopMacro)
+            {
+                StopMacro = true;
+            }
             return false;
         }
         #endregion
@@ -555,6 +572,8 @@ namespace MouseKeyPlayback
         #region Playback
         private void Play()
         {
+            StopMacro = false;
+            keyboardHookShots.Install();
             if (isHooked)
                 return;
 
@@ -567,7 +586,7 @@ namespace MouseKeyPlayback
                   
                     foreach (var record in recordList)
                     {
-                       
+                     
                         switch (record.Type)
                         {
                             case Constants.MOUSE:
@@ -591,6 +610,10 @@ namespace MouseKeyPlayback
                         }
                       
                         Thread.Sleep(4);
+                        if (StopMacro)
+                        {
+                            break;
+                        }
                     }
 
                     Thread.Sleep(10);
@@ -600,7 +623,8 @@ namespace MouseKeyPlayback
             {
                 System.Windows.MessageBox.Show("Repeat time is not valid!");
             }
-           
+
+            keyboardHookShots.Uninstall();
 
         }
         private void BtnPlayback_Click(object sender, RoutedEventArgs e)
@@ -617,6 +641,7 @@ namespace MouseKeyPlayback
 
         private void PlaybackKeyboard(Record record)
         {
+          
             Keys key = record.EventKey.Key;
             string action = record.EventKey.Action;
 
@@ -656,14 +681,29 @@ namespace MouseKeyPlayback
 				window.mouseEvents.ForEach(me => LogMouseEvents(me));
 			}
 		}
-        public enum EspecialChar {
+        public static Dictionary<char, Keys> specialkeys = new Dictionary<char, Keys>();
+        
+        private void RegisterSpecialKeys()
+        {
 
-        É =  Keys.OemOpenBrackets,
-        Ã = Keys.OemSemicolon,
-        È = Keys.OemOpenBrackets,
-        Õ = Keys.OemOpenBrackets,
-        Ó = Keys.OemOpenBrackets,
-        Ò = Keys.OemOpenBrackets
+            specialkeys.Add('Á', Keys.OemOpenBrackets);
+            specialkeys.Add('Ó', Keys.OemOpenBrackets);
+            specialkeys.Add('É', Keys.OemOpenBrackets);
+
+            specialkeys.Add(';', Keys.OemSemicolon);
+            specialkeys.Add('Ã', Keys.Oem7);
+            specialkeys.Add('Ñ', Keys.Oem7);
+            specialkeys.Add(' ', Keys.Space);
+            specialkeys.Add('+', Keys.Oemplus);
+            specialkeys.Add('?', Keys.Oemtilde);
+            specialkeys.Add('\'', Keys.OemQuotes);
+            specialkeys.Add('"', Keys.OemQuotes);
+            specialkeys.Add('|', Keys.OemPipe);
+            specialkeys.Add('.', Keys.OemPeriod);
+            specialkeys.Add(',', Keys.Oemcomma);
+            specialkeys.Add('Õ', Keys.Oem7);
+
+
 
 
 
@@ -685,6 +725,19 @@ namespace MouseKeyPlayback
 
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
+        private static Keys getKeySpecial(char value)
+        {
+            Keys result = Keys.None;
+            foreach(var item in specialkeys)
+            {
+                if(item.Key == value)
+                {
+                    result = item.Value;
+                }
+               
+            }
+            return result;
+        }
         private void BtnCreateText_Click(object sender, RoutedEventArgs e)
 		{
 			var window = new CreateManualTypeKeyWindow();
@@ -705,23 +758,23 @@ namespace MouseKeyPlayback
                     }
                     catch (Exception )
                     {
-                        if (code != ' ')
-                        {                               
-                            Debug.WriteLine("REGEX:" + RemoveDiacritics(code.ToString()));
 
-                            Keys key_especial = (Keys)Enum.Parse(typeof(EspecialChar), code.ToString());
-                            key = (Keys)Enum.Parse(typeof(Keys), RemoveDiacritics(code.ToString()));
-                            LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = Constants.KEY_DOWN });
+                            Keys key_especial = getKeySpecial(code);
+                        var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(code);
+                        if(unicodeCategory != UnicodeCategory.OtherPunctuation && unicodeCategory != UnicodeCategory.SpaceSeparator)
+                        {
+                        key = (Keys)Enum.Parse(typeof(Keys), RemoveDiacritics(code.ToString()));
+
+                        }
+LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = Constants.KEY_DOWN });
 
                             LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = Constants.KEY_UP });
 
-                        }
-                        else
-                        {
-                            key = Keys.Space;
-
-                        }
                     }
+                            
+                        
+                    
+                    
 					LogKeyboardEvents(new KeyboardEvent { Key = key, Action = Constants.KEY_DOWN });
 				
                     LogKeyboardEvents(new KeyboardEvent { Key = key, Action = Constants.KEY_UP });
@@ -869,19 +922,36 @@ namespace MouseKeyPlayback
 			}
 
 		}
+        T[] InitializeArray<T>(int length) where T : new()
+        {
+            T[] array = new T[length];
+            for (int i = 0; i < length; ++i)
+            {
+                array[i] = new T();
+            }
+
+            return array;
+        }
         private void DeleteItem(object sender, RoutedEventArgs e)
         {
-            var item = listView.SelectedItem as Record;
-          
-            try
-            {
-                this.listView.Items.Remove(item);
-                RemoveRecordItem(item);
+          var itemall = listView.SelectedItems;
+            Record[] cache = InitializeArray<Record>(itemall.Count);
+           
+                itemall.CopyTo(cache, 0);
+            
+  
+        for(int i =0;i < cache.Count(); i++) { 
+                try
+                {
+                    var item = (Record)cache[i];
+                    this.listView.Items.Remove(item);
+                    RemoveRecordItem(item);
 
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
             }
         }
 

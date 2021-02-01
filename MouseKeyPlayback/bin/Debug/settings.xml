@@ -8,5 +8,5 @@
   <HotKeyStartRecord>Control + Q</HotKeyStartRecord>
   <HotKeyStopRecord>Control + G</HotKeyStopRecord>
   <HotKeyPlay>Control + J</HotKeyPlay>
-  <HotKeyStopMacro>Control + J</HotKeyStopMacro>
+  <HotKeyStopMacro>Control + F2</HotKeyStopMacro>
 </AppSettings>

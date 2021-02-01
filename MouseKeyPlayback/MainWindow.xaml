@@ -216,7 +216,7 @@
                         Margin="0,0,0,0"
                         MouseLeave="ListView_MouseLeave"
                         ScrollViewer.CanContentScroll="True"
-                        ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                         SelectionChanged="ListView_SelectionChanged">
                         <ListView.View>
 
