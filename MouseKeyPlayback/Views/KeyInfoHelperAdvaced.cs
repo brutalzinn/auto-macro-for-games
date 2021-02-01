@@ -13,8 +13,10 @@ namespace MouseKeyPlayback.Views
 {
     public partial class KeyInfoHelperAdvaced : Form
     {
-        List<Keys> modifierKeys { get; set; } = new List<Keys>();
-        List<Keys> nonModifierKeys { get; set; } = new List<Keys>();
+      public  List<Keys> modifierKeys { get; set; } = new List<Keys>();
+       public List<Keys> nonModifierKeys { get; set; } = new List<Keys>();
+
+
         public string keysResult { get; set; }
         private KeyboardHook keyboardHook = new KeyboardHook();
 
@@ -63,7 +65,7 @@ namespace MouseKeyPlayback.Views
                
             keysResult = string.IsNullOrEmpty(value1) ? value2 : string.IsNullOrEmpty(value2) ? value1 : (string.Join(" + ", value1, value2));
                 textBox1.Text = keysResult;
-             
+               
 
 
 
@@ -76,15 +78,16 @@ namespace MouseKeyPlayback.Views
             Debug.WriteLine(kEvent.Action);
             if (kEvent.Action == Constants.KEY_DOWN)
             {
-                if ((Control.ModifierKeys & kEvent.Key) == kEvent.Key)
+                if (kEvent.Key.HasFlag(Control.ModifierKeys))
                 {
                     modifierKeys.Add(kEvent.Key);
-                }
-
-                else
+                }else
                 {
+
+                
                     nonModifierKeys.Add(kEvent.Key);
                 }
+            
                 UpdateTextBox();
             }
         

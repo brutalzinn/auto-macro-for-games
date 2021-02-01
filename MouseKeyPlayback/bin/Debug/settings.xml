@@ -5,6 +5,13 @@
   <DefaultTimer>0</DefaultTimer>
   <BetweenKeys>true</BetweenKeys>
   <ForeachKeys>false</ForeachKeys>
-  <HotKeyPlay>LControlKey + J</HotKeyPlay>
-  <HotKeyStopMacro>LControlKey + B</HotKeyStopMacro>
+  <HotKeyPlay>Control + J</HotKeyPlay>
+  <StopMacroControl>
+    <HotKeyStopModifiers>
+      <Keys>LControlKey</Keys>
+    </HotKeyStopModifiers>
+    <HotKeyStopKeys>
+      <Keys>R</Keys>
+    </HotKeyStopKeys>
+  </StopMacroControl>
 </AppSettings>

@@ -69,8 +69,23 @@ namespace MouseKeyPlayback.Utils
             eh?.Invoke(this, e);
         }
 
-    
-        
+        public class StopPlayMacro
+        {
+            public StopPlayMacro()
+            {
+
+            }
+
+            public StopPlayMacro(List <Keys> modifierKeys, List<Keys> keys)
+            {
+                HotKeyStopModifiers = modifierKeys;
+                HotKeyStopKeys = keys;
+            }
+            public List<Keys> HotKeyStopModifiers { get; set; }
+            public List<Keys> HotKeyStopKeys { get; set; }
+
+        }
+
         public int minRamdomConfig { get; set; }
         public int maxRamdomConfig { get; set; }
         public int DefaultTimer{ get; set; }
@@ -80,7 +95,7 @@ namespace MouseKeyPlayback.Utils
         public string HotKeyStartRecord { get; set; }
         public string HotKeyStopRecord { get; set; }
         public string HotKeyPlay { get; set; }
-        public string HotKeyStopMacro{ get; set; }
-
+       
+       public StopPlayMacro StopMacroControl { get; set; } = new StopPlayMacro();
     }
 }

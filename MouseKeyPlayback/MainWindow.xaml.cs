@@ -205,15 +205,14 @@ namespace MouseKeyPlayback
                 Key = (Keys)key,
                 Action = (keyState == BaseHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
             };
-            var c = new KeyGestureConverter();
-            KeyGesture aKeyGesture = (KeyGesture)c.ConvertFrom(ApplicationSettingsManager.Settings.HotKeyStopMacro);
+        
             
-            if (kEvent.Key == (Keys)aKeyGesture.Modifiers && kEvent.Key == (Keys)aKeyGesture.Key)
-            {
+           
+           
                 Debug.WriteLine("true");
                 StopMacro = true;
 
-            }
+            
             
                 
                 
