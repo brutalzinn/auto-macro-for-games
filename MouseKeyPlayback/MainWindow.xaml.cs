@@ -212,40 +212,29 @@ namespace MouseKeyPlayback
         }
         private bool KeyboardHookShotups_OnKeyboardEvent(uint key, BaseHook.KeyState keyState)
         {
+            Stopwatch sw = Stopwatch.StartNew();
+
             KeyboardEvent kEvent = new KeyboardEvent
             {
                 Key = (Keys)key,
                 Action = (keyState == BaseHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
             };
 
-
-
-           
-           
-        
-            
-
-          
-            //  
 KeyStopMacroCache.Add(kEvent.Key);
 
             if (ContainsSubsequence(KeyStopMacroCache, KeyStopMacroStopKeys))
             {
                 
-                Debug.WriteLine("true");
+                Debug.WriteLine("Stop macro called");
 StopMacro = true;
             }
-            if (KeyStopMacroCache.Count > KeyStopMacroStopKeys.Count + 3)
-            {
-                KeyStopMacroCache.Clear();
-            }
-
-
-
-
-
+         
+        
+            sw.Stop();
+            Console.WriteLine("Time for macro keyboard taken: {0}ms", sw.Elapsed.TotalMilliseconds);
 
             return false;
+            
         }
         #endregion
 
@@ -611,13 +600,17 @@ StopMacro = true;
         private void Play()
         {
             StopMacro = false;
+            KeyStopMacroCache.Clear();
+
             Parallel.Invoke(() => keyboardHookShots.Install());
 
-            ;
+            
             if (isHooked)
                 return;
 
             int num;
+            Stopwatch sw = Stopwatch.StartNew();
+
             if (int.TryParse(repeatTime.Text, out num))
             {
                 for (int i = 0; i < num; ++i)
@@ -648,21 +641,30 @@ StopMacro = true;
                             default:
                                 break;
                         }
-                      
-                        Thread.Sleep(4);
-                        if (StopMacro)
+                     if (StopMacro)
                         {
                             break;
                         }
+                        if (KeyStopMacroStopKeys.Count * 0.5 > sw.Elapsed.TotalMilliseconds)
+                        {
+                            Debug.WriteLine("Clear all keyboards cached keys" + sw.Elapsed.TotalMilliseconds);
+                            KeyStopMacroCache.Clear();
+                        }
+                        Thread.Sleep(4);
+                       
                     }
 
                     Thread.Sleep(10);
                 }
+
             }
             else
             {
                 System.Windows.MessageBox.Show("Repeat time is not valid!");
             }
+            sw.Stop();
+            Console.WriteLine("Time total execution: {0}ms", sw.Elapsed.TotalMilliseconds);
+
 
             keyboardHookShots.Uninstall();
 
