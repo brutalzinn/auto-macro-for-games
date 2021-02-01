@@ -83,11 +83,17 @@
     <Compile Include="Views\CreateWaitWindow.xaml.cs">
       <DependentUpon>CreateWaitWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\KeyInfoHelper.cs">
+    <Compile Include="Views\HotkeyPopup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\KeyInfoHelper.Designer.cs">
-      <DependentUpon>KeyInfoHelper.cs</DependentUpon>
+    <Compile Include="Views\HotkeyPopup.designer.cs">
+      <DependentUpon>HotkeyPopup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\KeyInfoHelperAdvaced.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\KeyInfoHelperAdvaced.Designer.cs">
+      <DependentUpon>KeyInfoHelperAdvaced.cs</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -152,8 +158,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\KeyInfoHelper.resx">
-      <DependentUpon>KeyInfoHelper.cs</DependentUpon>
+    <EmbeddedResource Include="Views\HotkeyPopup.resx">
+      <DependentUpon>HotkeyPopup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\KeyInfoHelperAdvaced.resx">
+      <DependentUpon>KeyInfoHelperAdvaced.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

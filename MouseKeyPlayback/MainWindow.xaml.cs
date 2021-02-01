@@ -39,7 +39,7 @@ namespace MouseKeyPlayback
 
         private volatile bool m_StopThread = false;
         private bool NeedExit { get; set; } = false;
-        public Keys keyStopMacro { get; set; }
+        public List<Keys> keyStopMacro { get; set; } = new List<Keys>();
 
         public MainWindow()
         {
@@ -110,7 +110,8 @@ namespace MouseKeyPlayback
 
             }
             
-         keyStopMacro =   (Keys)Enum.Parse(typeof(Keys), ApplicationSettingsManager.Settings.HotKeyStopMacro, true);
+            
+        
         }
         private void StopMacroKey()
         {
@@ -144,6 +145,7 @@ namespace MouseKeyPlayback
             mouseHook.OnMouseEvent += MouseHook_OnMouseEvent;
             mouseHook.OnMouseMove += MouseHook_OnMouseMove;
             mouseHook.OnMouseWheelEvent += MouseHook_OnMouseWheelEvent;
+            
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -203,11 +205,24 @@ namespace MouseKeyPlayback
                 Key = (Keys)key,
                 Action = (keyState == BaseHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
             };
-
-            if (kEvent.Key == keyStopMacro)
+            var c = new KeyGestureConverter();
+            KeyGesture aKeyGesture = (KeyGesture)c.ConvertFrom(ApplicationSettingsManager.Settings.HotKeyStopMacro);
+            
+            if (kEvent.Key == (Keys)aKeyGesture.Modifiers && kEvent.Key == (Keys)aKeyGesture.Key)
             {
+                Debug.WriteLine("true");
                 StopMacro = true;
+
             }
+            
+                
+                
+                    
+            
+                   
+                
+            
+            
             return false;
         }
         #endregion

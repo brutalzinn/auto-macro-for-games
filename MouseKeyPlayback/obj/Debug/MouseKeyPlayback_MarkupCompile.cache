@@ -4,15 +4,15 @@
 winexe
 C#
 .cs
-C:\Users\carlo\Documents\My Projects\auto-macro-for-games\MouseKeyPlayback\obj\Debug\
+C:\Users\rober\Desktop\app-recorder-master\app-recorder-master\MouseKeyPlayback\obj\Debug\
 MouseKeyPlayback
 none
 false
 DEBUG;TRACE
-C:\Users\carlo\Documents\My Projects\auto-macro-for-games\MouseKeyPlayback\App.xaml
+C:\Users\rober\Desktop\app-recorder-master\app-recorder-master\MouseKeyPlayback\App.xaml
 6-1193778910
 
-30-1215078114
+32-1324337576
 17-554029437
 MainWindow.xaml;Views\ConfigPage.xaml;Views\CreateInsertKeyWindow.xaml;Views\CreateManualClickWindow.xaml;Views\CreateManualTypeKeyWindow.xaml;Views\CreateWaitWindow.xaml;
 

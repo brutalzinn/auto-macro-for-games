@@ -1,4 +1,5 @@
 ﻿
+using GlobalHotkeys;
 using MouseKeyPlayback.Utils;
 using System;
 using System.Collections.Generic;
@@ -55,7 +56,7 @@ namespace MouseKeyPlayback.Views
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            KeyInfoHelper teste = new KeyInfoHelper();
+            KeyInfoHelperAdvaced teste = new KeyInfoHelperAdvaced();
         teste.ShowDialog();
             ApplicationSettingsManager.Settings.HotKeyStartRecord = teste.keysResult;
 
@@ -64,7 +65,7 @@ namespace MouseKeyPlayback.Views
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            KeyInfoHelper teste = new KeyInfoHelper();
+            KeyInfoHelperAdvaced teste = new KeyInfoHelperAdvaced();
             teste.ShowDialog();
             ApplicationSettingsManager.Settings.HotKeyStopRecord = teste.keysResult;
 
@@ -72,7 +73,7 @@ namespace MouseKeyPlayback.Views
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            KeyInfoHelper teste = new KeyInfoHelper();
+            KeyInfoHelperAdvaced teste = new KeyInfoHelperAdvaced();
             teste.ShowDialog();
             ApplicationSettingsManager.Settings.HotKeyPlay = teste.keysResult;
 
@@ -80,9 +81,9 @@ namespace MouseKeyPlayback.Views
 
         private void HotKeyStopMacro(object sender, RoutedEventArgs e)
         {
-            KeyInfoHelper teste = new KeyInfoHelper();
+            KeyInfoHelperAdvaced teste = new KeyInfoHelperAdvaced();
             teste.ShowDialog();
-            ApplicationSettingsManager.Settings.HotKeyStopMacro = teste.keysResult;
+         ApplicationSettingsManager.Settings.HotKeyStopMacro = teste.keysResult;
         }
     }
 }
