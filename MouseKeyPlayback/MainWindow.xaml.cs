@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls.Primitives;
@@ -39,7 +40,8 @@ namespace MouseKeyPlayback
 
         private volatile bool m_StopThread = false;
         private bool NeedExit { get; set; } = false;
-        public List<Keys> keyStopMacro { get; set; } = new List<Keys>();
+        public List<Keys> KeyStopMacroCache { get; set; } = new List<Keys>();
+        public List<Keys> KeyStopMacroStopKeys { get; set; } = new List<Keys>();
 
         public MainWindow()
         {
@@ -109,9 +111,19 @@ namespace MouseKeyPlayback
                 GlobalHotKey.RegisterHotKey(ApplicationSettingsManager.Settings.HotKeyPlay, Play);
 
             }
+
+            foreach(Keys item in ApplicationSettingsManager.Settings.StopMacroControl.HotKeyStopModifiers)
+            {
+                KeyStopMacroStopKeys.Add(item);
+                Debug.WriteLine("ITEMMODIFIER:" + item);
+            }
+            foreach (Keys itemb in ApplicationSettingsManager.Settings.StopMacroControl.HotKeyStopKeys)
+            {
+                KeyStopMacroStopKeys.Add(itemb);
+                Debug.WriteLine("ITEMNONMODIFIER:" + itemb);
+            }
+
             
-            
-        
         }
         private void StopMacroKey()
         {
@@ -205,23 +217,34 @@ namespace MouseKeyPlayback
                 Key = (Keys)key,
                 Action = (keyState == BaseHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
             };
+
+
+
+           
+           
         
             
-           
-           
-                Debug.WriteLine("true");
-                StopMacro = true;
 
-            
-            
+          
+            //  
+KeyStopMacroCache.Add(kEvent.Key);
+
+            if (ContainsSubsequence(KeyStopMacroCache, KeyStopMacroStopKeys))
+            {
                 
-                
-                    
-            
-                   
-                
-            
-            
+                Debug.WriteLine("true");
+StopMacro = true;
+            }
+            if (KeyStopMacroCache.Count > KeyStopMacroStopKeys.Count + 3)
+            {
+                KeyStopMacroCache.Clear();
+            }
+
+
+
+
+
+
             return false;
         }
         #endregion
@@ -253,8 +276,9 @@ namespace MouseKeyPlayback
                 recordList = new List<Record>();
                 count = 0;
             }
+        keyboardHook.Install();
 
-            keyboardHook.Install();
+            //keyboardHook.Install();
             mouseHook.Install();
             isHooked = true;
 
@@ -587,7 +611,9 @@ namespace MouseKeyPlayback
         private void Play()
         {
             StopMacro = false;
-            keyboardHookShots.Install();
+            Parallel.Invoke(() => keyboardHookShots.Install());
+
+            ;
             if (isHooked)
                 return;
 
@@ -907,8 +933,41 @@ LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = Constants.KEY
 		{
 			return new System.Drawing.Point((int)r.EventMouse.Location.X, (int)r.EventMouse.Location.Y);
 		}
+        public bool ContainsDifferentSequence<T>(List<T> outer, List<T> inner)
 
-		private void ListView_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            var innerCount = inner.Count();
+            for (int i = 0; i < outer.Count() - innerCount; i++)
+            {
+                if (outer.Skip(i).Take(innerCount).SequenceEqual(inner))
+                    return true;
+            }
+
+            return false;
+        }
+        public bool ContainsSubsequence(List<Keys> sequence, List<Keys> subsequence)
+        {
+            int i = 0;
+           
+                foreach(Keys item in sequence)
+            {
+
+                if (subsequence.Contains(item))
+                {
+                    i++;
+                }
+            }
+                if(subsequence.Count == i)
+            {
+                return true;
+
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private void ListView_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
 		{
 			try
 			{
