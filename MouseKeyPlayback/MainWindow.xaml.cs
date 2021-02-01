@@ -28,14 +28,19 @@ namespace MouseKeyPlayback
     {
         #region Private Properties
         private KeyboardHook keyboardHook = new KeyboardHook();
+        private KeyboardHook keyboardHookShots = new KeyboardHook();
+
         private MouseHook mouseHook = new MouseHook();
         private int count = 0;
         private bool isHooked = false;
+        private bool StopMacro = false;
         private List<Record> recordList;
         #endregion
 
         private volatile bool m_StopThread = false;
         private bool NeedExit { get; set; } = false;
+        public Keys keyStopMacro { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -104,18 +109,15 @@ namespace MouseKeyPlayback
                 GlobalHotKey.RegisterHotKey(ApplicationSettingsManager.Settings.HotKeyPlay, Play);
 
             }
-            if (ApplicationSettingsManager.Settings.HotKeyStopMacro != null)
-            {
-                GlobalHotKey.RegisterHotKey(ApplicationSettingsManager.Settings.HotKeyStartRecord, StopMacro);
-
-            }
+            
+         keyStopMacro =   (Keys)Enum.Parse(typeof(Keys), ApplicationSettingsManager.Settings.HotKeyStopMacro, true);
         }
-        private void StopMacro()
+        private void StopMacroKey()
         {
-            keyboardHook.Uninstall();
-            mouseHook.Uninstall();
-            isHooked = false;
-            NeedExit = true;
+    
+         
+            StopMacro = true;  
+         
         }
         private void ListView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -138,7 +140,7 @@ namespace MouseKeyPlayback
             //mouseHook.OnMouseWheelEvent += MouseHook_OnMouseWheelEvent;
             //mouseHook.Install();
             keyboardHook.OnKeyboardEvent += KeyboardHook_OnKeyboardEvent;
-
+            keyboardHookShots.OnKeyboardEvent += KeyboardHookShotups_OnKeyboardEvent;
             mouseHook.OnMouseEvent += MouseHook_OnMouseEvent;
             mouseHook.OnMouseMove += MouseHook_OnMouseMove;
             mouseHook.OnMouseWheelEvent += MouseHook_OnMouseWheelEvent;
@@ -192,6 +194,20 @@ namespace MouseKeyPlayback
                 Action = (keyState == BaseHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
             };
             LogKeyboardEvents(kEvent);
+            return false;
+        }
+        private bool KeyboardHookShotups_OnKeyboardEvent(uint key, BaseHook.KeyState keyState)
+        {
+            KeyboardEvent kEvent = new KeyboardEvent
+            {
+                Key = (Keys)key,
+                Action = (keyState == BaseHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
+            };
+
+            if (kEvent.Key == keyStopMacro)
+            {
+                StopMacro = true;
+            }
             return false;
         }
         #endregion
@@ -556,6 +572,8 @@ namespace MouseKeyPlayback
         #region Playback
         private void Play()
         {
+            StopMacro = false;
+            keyboardHookShots.Install();
             if (isHooked)
                 return;
 
@@ -568,7 +586,7 @@ namespace MouseKeyPlayback
                   
                     foreach (var record in recordList)
                     {
-                       
+                     
                         switch (record.Type)
                         {
                             case Constants.MOUSE:
@@ -592,6 +610,10 @@ namespace MouseKeyPlayback
                         }
                       
                         Thread.Sleep(4);
+                        if (StopMacro)
+                        {
+                            break;
+                        }
                     }
 
                     Thread.Sleep(10);
@@ -601,7 +623,8 @@ namespace MouseKeyPlayback
             {
                 System.Windows.MessageBox.Show("Repeat time is not valid!");
             }
-           
+
+            keyboardHookShots.Uninstall();
 
         }
         private void BtnPlayback_Click(object sender, RoutedEventArgs e)
@@ -618,6 +641,7 @@ namespace MouseKeyPlayback
 
         private void PlaybackKeyboard(Record record)
         {
+          
             Keys key = record.EventKey.Key;
             string action = record.EventKey.Action;
 
@@ -735,7 +759,6 @@ namespace MouseKeyPlayback
                     catch (Exception )
                     {
 
-                        Debug.WriteLine("code:" + code + "key: " + getKeySpecial(code));
                             Keys key_especial = getKeySpecial(code);
                         var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(code);
                         if(unicodeCategory != UnicodeCategory.OtherPunctuation && unicodeCategory != UnicodeCategory.SpaceSeparator)
