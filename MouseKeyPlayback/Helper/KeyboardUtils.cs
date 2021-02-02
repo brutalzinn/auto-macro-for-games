@@ -39,13 +39,13 @@ namespace MouseKeyPlayback
                 case Constants.KEY_DOWN:
          //      keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
                     WindowsInput.KeyboardSimulator teste = new WindowsInput.KeyboardSimulator();
-                    teste.KeyPress((WindowsInput.Native.VirtualKeyCode)key);
+                    teste.KeyDown((WindowsInput.Native.VirtualKeyCode)key);
                     break;
                 case Constants.KEY_UP:
           //       keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
                     WindowsInput.KeyboardSimulator abana = new WindowsInput.KeyboardSimulator();
 
-                    abana.KeyPress((WindowsInput.Native.VirtualKeyCode)key);
+                    abana.KeyUp((WindowsInput.Native.VirtualKeyCode)key);
 
                     break;
             }
