@@ -13,9 +13,9 @@ namespace MouseKeyPlayback
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(uint dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
 
-        public static void PerformMouseEvent(MouseHook.MouseEvents mEvent, CursorPoint location)
+        public static void PerformMouseEvent(InputSimulator instance,MouseHook.MouseEvents mEvent, CursorPoint location)
         {
-            var simulator = new InputSimulator();
+         
 
             int x = (int)location.X;
             int y = (int)location.Y;
@@ -25,21 +25,21 @@ namespace MouseKeyPlayback
             {
 
                 case MouseHook.MouseEvents.LeftDown:
-                    simulator.Mouse.MoveMouseBy(x,y);
-                    simulator.Mouse.LeftButtonDown();
+                    instance.Mouse.MoveMouseBy(x,y);
+                    instance.Mouse.LeftButtonDown();
                  //   mouse_event(Constants.MOUSEEVENT_LEFTDOWN, x, y, 0, 0);
                     break;
                 case MouseHook.MouseEvents.LeftUp:
-                    simulator.Mouse.MoveMouseBy(x, y);
-                    simulator.Mouse.LeftButtonUp();
+                    instance.Mouse.MoveMouseBy(x, y);
+                    instance.Mouse.LeftButtonUp();
                     break;
                 case MouseHook.MouseEvents.RightDown:
-                    simulator.Mouse.MoveMouseBy(x, y);
-                    simulator.Mouse.RightButtonDown();
+                    instance.Mouse.MoveMouseBy(x, y);
+                    instance.Mouse.RightButtonDown();
                     break;
                 case MouseHook.MouseEvents.RightUp:
-                    simulator.Mouse.MoveMouseBy(x, y);
-                    simulator.Mouse.RightButtonUp();
+                    instance.Mouse.MoveMouseBy(x, y);
+                    instance.Mouse.RightButtonUp();
 
                     break;
                 case MouseHook.MouseEvents.ScrollDown:

@@ -5,6 +5,8 @@
   <DefaultTimer>0</DefaultTimer>
   <BetweenKeys>true</BetweenKeys>
   <ForeachKeys>false</ForeachKeys>
+  <HotKeyStartRecord>Control + F1</HotKeyStartRecord>
+  <HotKeyStopRecord>Control + F2</HotKeyStopRecord>
   <HotKeyPlay>Control + J</HotKeyPlay>
   <StopMacroControl>
     <HotKeyStopModifiers>

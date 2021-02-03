@@ -1,4 +1,5 @@
 ﻿
+using GregsStack.InputSimulatorStandard;
 using MouseKeyPlayback.Library;
 using MouseKeyPlayback.Utils;
 using MouseKeyPlayback.Views;
@@ -42,7 +43,8 @@ namespace MouseKeyPlayback
         private bool NeedExit { get; set; } = false;
         public List<Keys> KeyStopMacroCache { get; set; } = new List<Keys>();
         public List<Keys> KeyStopMacroStopKeys { get; set; } = new List<Keys>();
-
+        private System.Timers.Timer myTimer = new System.Timers.Timer(1000); //using System.Timers, 1000 means 1000 msec = 1 sec interval
+        public InputSimulator simulator = new InputSimulator();
         public MainWindow()
         {
             InitializeComponent();
@@ -265,6 +267,8 @@ StopMacro = true;
                 recordList = new List<Record>();
                 count = 0;
             }
+               
+
         keyboardHook.Install();
 
             //keyboardHook.Install();
@@ -602,7 +606,7 @@ StopMacro = true;
         {
             StopMacro = false;
             KeyStopMacroCache.Clear();
-
+            simulator = new InputSimulator();
             Parallel.Invoke(() => keyboardHookShots.Install());
 
             
@@ -679,7 +683,7 @@ StopMacro = true;
         {
             CursorPoint newPos = record.EventMouse.Location;
             MouseHook.MouseEvents mEvent = record.EventMouse.Action;
-            MouseUtils.PerformMouseEvent(mEvent, newPos);
+            MouseUtils.PerformMouseEvent(simulator,mEvent, newPos);
         }
 
         private void PlaybackKeyboard(Record record)
@@ -688,7 +692,7 @@ StopMacro = true;
             Keys key = record.EventKey.Key;
             string action = record.EventKey.Action;
 
-            KeyboardUtils.PerformKeyEvent(key, action);
+            KeyboardUtils.PerformKeyEvent(simulator,key, action);
         }
         #endregion
 

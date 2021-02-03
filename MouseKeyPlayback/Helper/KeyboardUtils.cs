@@ -35,22 +35,22 @@ namespace MouseKeyPlayback
             return myChar;
         }
 
-        public static void PerformKeyEvent(Keys key, string action)
+        public static void PerformKeyEvent(InputSimulator instance, Keys key, string action)
         {
-            var simulator = new InputSimulator();
+           
 
             switch (action)
             {
                 case Constants.KEY_DOWN:
                     //      keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
-                    simulator.Keyboard.KeyDown((VirtualKeyCode)key);
+                    instance.Keyboard.KeyDown((VirtualKeyCode)key);
 
                     break;
                 case Constants.KEY_UP:
                     //       keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
 
                     // SimKeyboard.KeyUp((byte)key);
-                    simulator.Keyboard.KeyUp ((VirtualKeyCode)key);
+                    instance.Keyboard.KeyUp ((VirtualKeyCode)key);
 
                     break;
             }
