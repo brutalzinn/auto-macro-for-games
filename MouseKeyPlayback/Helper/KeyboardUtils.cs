@@ -1,4 +1,7 @@
-﻿using System;
+﻿using GregsStack.InputSimulatorStandard;
+using GregsStack.InputSimulatorStandard.Native;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -34,18 +37,20 @@ namespace MouseKeyPlayback
 
         public static void PerformKeyEvent(Keys key, string action)
         {
+            var simulator = new InputSimulator();
+
             switch (action)
             {
                 case Constants.KEY_DOWN:
-         //      keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
-                    WindowsInput.KeyboardSimulator teste = new WindowsInput.KeyboardSimulator();
-                    teste.KeyDown((WindowsInput.Native.VirtualKeyCode)key);
+                    //      keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
+                    simulator.Keyboard.KeyDown((VirtualKeyCode)key);
+
                     break;
                 case Constants.KEY_UP:
-          //       keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
-                    WindowsInput.KeyboardSimulator abana = new WindowsInput.KeyboardSimulator();
+                    //       keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
 
-                    abana.KeyUp((WindowsInput.Native.VirtualKeyCode)key);
+                    // SimKeyboard.KeyUp((byte)key);
+                    simulator.Keyboard.KeyUp ((VirtualKeyCode)key);
 
                     break;
             }

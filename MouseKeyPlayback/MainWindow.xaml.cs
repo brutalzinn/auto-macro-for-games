@@ -423,9 +423,60 @@ StopMacro = true;
                 Type = Constants.MOUSE,
                 Content = String.Format("{0} was triggered at ({1}, {2})", mEvent.Action, mEvent.Location.X, mEvent.Location.Y)
             };
-        
-            AddRecordItem(item);
-         
+
+            if (CheckBoxRandom.IsChecked.Value)
+            {
+                Record itemWait = new Record
+                {
+                    Id = count,
+
+                    WaitMaxMs = ApplicationSettingsManager.Settings.maxRamdomConfig,
+                    WaitMinMs = ApplicationSettingsManager.Settings.minRamdomConfig,
+                    Type = Constants.WAITRandom,
+                    Content = $"Wait {ApplicationSettingsManager.Settings.maxRamdomConfig} MAX Random ms. \n Wait {ApplicationSettingsManager.Settings.minRamdomConfig} Min Random ms "
+                };
+                if (ApplicationSettingsManager.Settings.BetweenKeys)
+                {
+                    AddRecordItem(itemWait);
+                    AddRecordItem(item);
+
+                }
+                else if (ApplicationSettingsManager.Settings.ForeachKeys)
+                {
+                    AddRecordItem(item);
+                    AddRecordItem(itemWait);
+                }
+
+
+            }
+
+            else if (CheckBoxDelay.IsChecked.Value)
+            {
+                Record itemWait = new Record
+                {
+                    Id = count,
+
+                    WaitMs = Convert.ToInt32(TextBoxDelayTime.Text),
+                    Type = Constants.WAIT,
+                    Content = $"Wait {Convert.ToInt32(TextBoxDelayTime.Text)} "
+                };
+                if (ApplicationSettingsManager.Settings.BetweenKeys)
+                {
+                    AddRecordItem(itemWait);
+                    AddRecordItem(item);
+
+                }
+                else if (ApplicationSettingsManager.Settings.ForeachKeys)
+                {
+                    AddRecordItem(item);
+                    AddRecordItem(itemWait);
+                }
+            }
+            else
+            {
+                AddRecordItem(item);
+            }
+
         }
    
             
@@ -933,7 +984,15 @@ LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = Constants.KEY
 
 		private System.Drawing.Point RecordToPoint(Record r)
 		{
-			return new System.Drawing.Point((int)r.EventMouse.Location.X, (int)r.EventMouse.Location.Y);
+            System.Drawing.Point result = System.Drawing.Point.Empty;
+          if (r != null) 
+                {
+			result= new System.Drawing.Point((int)r.EventMouse.Location.X, (int)r.EventMouse.Location.Y);
+
+                }
+            return result;
+
+            
 		}
         public bool ContainsDifferentSequence<T>(List<T> outer, List<T> inner)
 

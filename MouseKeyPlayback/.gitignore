@@ -1,0 +1,7 @@
+*.suo
+*.user
+*.cache
+[Bb]in/
+[Oo]bj/
+/packages/
+.vs

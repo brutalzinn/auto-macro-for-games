@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using GregsStack.InputSimulatorStandard;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace MouseKeyPlayback
@@ -14,25 +15,35 @@ namespace MouseKeyPlayback
 
         public static void PerformMouseEvent(MouseHook.MouseEvents mEvent, CursorPoint location)
         {
+            var simulator = new InputSimulator();
+
             int x = (int)location.X;
             int y = (int)location.Y;
             SetCursorPos(x, y);
 
             switch (mEvent)
             {
+
                 case MouseHook.MouseEvents.LeftDown:
-                    mouse_event(Constants.MOUSEEVENT_LEFTDOWN, x, y, 0, 0);
+                    simulator.Mouse.MoveMouseBy(x,y);
+                    simulator.Mouse.LeftButtonDown();
+                 //   mouse_event(Constants.MOUSEEVENT_LEFTDOWN, x, y, 0, 0);
                     break;
                 case MouseHook.MouseEvents.LeftUp:
-                    mouse_event(Constants.MOUSEEVENTF_LEFTUP, x, y, 0, 0);
+                    simulator.Mouse.MoveMouseBy(x, y);
+                    simulator.Mouse.LeftButtonUp();
                     break;
                 case MouseHook.MouseEvents.RightDown:
-                    mouse_event(Constants.MOUSEEVENTF_RIGHTDOWN, x, y, 0, 0);
+                    simulator.Mouse.MoveMouseBy(x, y);
+                    simulator.Mouse.RightButtonDown();
                     break;
                 case MouseHook.MouseEvents.RightUp:
-                    mouse_event(Constants.MOUSEEVENTF_RIGHTUP, x, y, 0, 0);
+                    simulator.Mouse.MoveMouseBy(x, y);
+                    simulator.Mouse.RightButtonUp();
+
                     break;
                 case MouseHook.MouseEvents.ScrollDown:
+                
                     mouse_event(Constants.MOUSEEVENTF_WHEEL, 0, 0, -120, 0);
                     break;
                 case MouseHook.MouseEvents.ScrollUp:

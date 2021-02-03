@@ -62,6 +62,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="GregsStack.InputSimulatorStandard\IInputDeviceStateAdapter.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\IInputMessageDispatcher.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\IInputSimulator.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\IKeyboardSimulator.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\IMouseSimulator.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\InputBuilder.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\InputSimulator.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\KeyboardSimulator.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\MouseButton.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\MouseSimulator.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\Native\HardwareInput.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\Native\Input.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\Native\InputType.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\Native\KeyboardFlag.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\Native\KeyboardInput.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\Native\MouseFlag.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\Native\MouseInput.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\Native\MouseKeyboardHardwareInput.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\Native\NativeMethods.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\Native\Point.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\Native\VirtualKeyCode.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\Native\XButton.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\WindowsInputDeviceStateAdapter.cs" />
+    <Compile Include="GregsStack.InputSimulatorStandard\WindowsInputMessageDispatcher.cs" />
+    <Compile Include="Helper\Win32Wrapper.cs" />
     <Compile Include="InterfaceWindow.cs" />
     <Compile Include="Library\AppExportUtils.cs" />
     <Compile Include="Library\AppSettings.cs" />
@@ -102,29 +127,6 @@
     <Compile Include="Views\KeyInfoHelperAdvaced.Designer.cs">
       <DependentUpon>KeyInfoHelperAdvaced.cs</DependentUpon>
     </Compile>
-    <Compile Include="WindowsInput\IInputDeviceStateAdaptor.cs" />
-    <Compile Include="WindowsInput\IInputMessageDispatcher.cs" />
-    <Compile Include="WindowsInput\IInputSimulator.cs" />
-    <Compile Include="WindowsInput\IKeyboardSimulator.cs" />
-    <Compile Include="WindowsInput\IMouseSimulator.cs" />
-    <Compile Include="WindowsInput\InputBuilder.cs" />
-    <Compile Include="WindowsInput\InputSimulator.cs" />
-    <Compile Include="WindowsInput\KeyboardSimulator.cs" />
-    <Compile Include="WindowsInput\MouseButton.cs" />
-    <Compile Include="WindowsInput\MouseSimulator.cs" />
-    <Compile Include="WindowsInput\Native\HARDWAREINPUT.cs" />
-    <Compile Include="WindowsInput\Native\INPUT.cs" />
-    <Compile Include="WindowsInput\Native\InputType.cs" />
-    <Compile Include="WindowsInput\Native\KEYBDINPUT.cs" />
-    <Compile Include="WindowsInput\Native\KeyboardFlag.cs" />
-    <Compile Include="WindowsInput\Native\MouseFlag.cs" />
-    <Compile Include="WindowsInput\Native\MOUSEINPUT.cs" />
-    <Compile Include="WindowsInput\Native\MOUSEKEYBDHARDWAREINPUT.cs" />
-    <Compile Include="WindowsInput\Native\NativeMethods.cs" />
-    <Compile Include="WindowsInput\Native\VirtualKeyCode.cs" />
-    <Compile Include="WindowsInput\Native\XButton.cs" />
-    <Compile Include="WindowsInput\WindowsInputDeviceStateAdaptor.cs" />
-    <Compile Include="WindowsInput\WindowsInputMessageDispatcher.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -201,7 +203,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="WindowsInput\WindowsInput.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -243,9 +244,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\settingstwo.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="WindowsInput\Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
