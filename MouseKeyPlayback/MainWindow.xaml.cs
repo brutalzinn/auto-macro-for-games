@@ -424,6 +424,14 @@ StopMacro = true;
                 Content = String.Format("{0} was triggered at ({1}, {2})", mEvent.Action, mEvent.Location.X, mEvent.Location.Y)
             };
 
+            CheckDelayActions(item);
+
+        }
+   
+            
+
+     private void CheckDelayActions(Record item)
+        {
             if (CheckBoxRandom.IsChecked.Value)
             {
                 Record itemWait = new Record
@@ -452,6 +460,8 @@ StopMacro = true;
 
             else if (CheckBoxDelay.IsChecked.Value)
             {
+
+               
                 Record itemWait = new Record
                 {
                     Id = count,
@@ -460,6 +470,11 @@ StopMacro = true;
                     Type = Constants.WAIT,
                     Content = $"Wait {Convert.ToInt32(TextBoxDelayTime.Text)} "
                 };
+
+
+
+
+
                 if (ApplicationSettingsManager.Settings.BetweenKeys)
                 {
                     AddRecordItem(itemWait);
@@ -476,21 +491,7 @@ StopMacro = true;
             {
                 AddRecordItem(item);
             }
-
         }
-   
-            
-
-        
-
-        
-            
-            
-        
-
-    
-
-            
         
 
         private void LogKeyboardEvents(KeyboardEvent kEvent)
@@ -504,58 +505,7 @@ StopMacro = true;
                 Content = String.Format("{0} was {1}", kEvent.Key.ToString(),
                     (kEvent.Action == Constants.KEY_DOWN) ? "pressed" : "released")
             };
-            if (CheckBoxRandom.IsChecked.Value)
-            {
-                Record itemWait = new Record
-                {
-                    Id = count,
-
-                    WaitMaxMs = ApplicationSettingsManager.Settings.maxRamdomConfig,
-                    WaitMinMs = ApplicationSettingsManager.Settings.minRamdomConfig,
-                    Type = Constants.WAITRandom,
-                    Content = $"Wait {ApplicationSettingsManager.Settings.maxRamdomConfig} MAX Random ms. \n Wait {ApplicationSettingsManager.Settings.minRamdomConfig} Min Random ms "
-                };
-                if (ApplicationSettingsManager.Settings.BetweenKeys)
-                {
-                    AddRecordItem(itemWait);
-                    AddRecordItem(item);
-
-                }
-                else if (ApplicationSettingsManager.Settings.ForeachKeys)
-                {
-                    AddRecordItem(item);
-                    AddRecordItem(itemWait);
-                }
-
-
-            }
-          
-        else if(CheckBoxDelay.IsChecked.Value)
-            {
-                Record itemWait = new Record
-                {
-                    Id = count,
-
-                    WaitMs = Convert.ToInt32(TextBoxDelayTime.Text),
-                    Type = Constants.WAIT,
-                    Content = $"Wait {Convert.ToInt32(TextBoxDelayTime.Text)} "
-                };
-                if (ApplicationSettingsManager.Settings.BetweenKeys)
-                {
-                    AddRecordItem(itemWait);
-                    AddRecordItem(item);
-
-                }
-                else if (ApplicationSettingsManager.Settings.ForeachKeys)
-                {
-                    AddRecordItem(item);
-                    AddRecordItem(itemWait);
-                }
-            }
-            else
-            {
-                AddRecordItem(item);
-            }
+            CheckDelayActions(item);
         }
 
    
