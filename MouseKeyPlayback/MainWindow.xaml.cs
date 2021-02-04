@@ -21,6 +21,7 @@ using System.Windows.Automation;
 using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 using System.Windows.Input;
+using Point = System.Windows.Point;
 
 namespace MouseKeyPlayback
 {
