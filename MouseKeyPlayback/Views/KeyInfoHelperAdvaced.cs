@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MouseKeyboardLibrary;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -31,8 +32,9 @@ namespace MouseKeyPlayback.Views
         public KeyInfoHelperAdvaced()
         {
             InitializeComponent();
-            keyboardHook.OnKeyboardEvent += KeyboardHook_OnKeyboardEvent;
-            keyboardHook.Install();
+            keyboardHook.KeyUp += KeyBoardKeyUp;
+            keyboardHook.KeyDown += KeyBoardKeyDown;
+            keyboardHook.Start();
             textBox1.Click += (sender, e) => {
                 if (!ListenToKeys)
                 {
@@ -45,12 +47,33 @@ namespace MouseKeyPlayback.Views
             };
         }
 
-        private bool KeyboardHook_OnKeyboardEvent(uint key, BaseHook.KeyState keyState)
+        private void KeyBoardKeyDown(object sender, KeyEventArgs e)
+        {
+            KeyboardEvent kEvent = new KeyboardEvent
+            {
+                Key = e.KeyCode,
+                Action = Constants.KEY_DOWN
+            };
+            LogKeyboardEvents(kEvent);
+        }
+
+        private void KeyBoardKeyUp(object sender, KeyEventArgs e)
+        {
+            KeyboardEvent kEvent = new KeyboardEvent
+            {
+                Key = e.KeyCode,
+                Action = Constants.KEY_UP
+            };
+            LogKeyboardEvents(kEvent);
+        }
+
+    
+        private bool KeyboardHook_OnKeyboardEventtt(uint key, GlobalHook.KeyState keyState)
         {
             KeyboardEvent kEvent = new KeyboardEvent
             {
                 Key = (Keys)key,
-                Action = (keyState == BaseHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
+                Action = (keyState == GlobalHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
             };
             LogKeyboardEvents(kEvent);
             return false;

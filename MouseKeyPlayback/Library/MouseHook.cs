@@ -11,41 +11,33 @@ namespace MouseKeyboardLibrary
     public class MouseHook : GlobalHook
     {
 
-        #region MouseEventType Enum
-        public enum MouseKeys
-        {
-            Left = MouseEvents.LeftDown,
-            Middle = MouseEvents.MiddleDown,
-            Right = MouseEvents.RightDown
+    
+  
 
-        }
         public enum MouseEventType
         {
             None,
             MouseDown,
+            Click,
             MouseUp,
             DoubleClick,
             MouseWheel,
             MouseMove
         }
-        public enum MouseEvents
+        public enum MouseActions
         {
-            LeftDown = 0x201,
-            LeftUp = 0x202,
-            LeftDoubleClick = 0x203,
-            RightDown = 0x204,
-            RightUp = 0x205,
-            RightDoubleClick = 0x206,
-            MiddleDown = 0x207,
-            MiddleUp = 0x208,
-            MiddleDoubleClick = 0x209,
-            MouseScroll = 0x20a,
-            ScrollUp = 7864320,
-            ScrollDown = -7864320,
-            MouseMove = -1
+            Click,
+            DoubleClick,
+            Up,
+            Down
         }
+        public enum MouseKeys
+        {
+            Left = MouseEventType.MouseDown,
+            Middle = MouseEventType.MouseDown,
+            Right = MouseEventType.MouseDown
 
-        #endregion
+        }
 
         #region Events
 

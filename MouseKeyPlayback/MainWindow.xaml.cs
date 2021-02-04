@@ -182,12 +182,13 @@ namespace MouseKeyPlayback
 
         private void MouseHook_OnMouseEvent(object sender, System.Windows.Forms.MouseEventArgs e)
         {
+          
             throw new NotImplementedException();
         }
 
         private void MouseHook_OnMouseWheelEvent(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            ProcessMouseEvent((MouseHook.MouseEvents)e.Button, 120);
+           // ProcessMouseEvent((MouseHook.MouseEvents)e.Button, 120);
         }
 
         private void MouseHook_OnMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)

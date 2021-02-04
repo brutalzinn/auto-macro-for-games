@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MouseKeyboardLibrary;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
 
 namespace MouseKeyPlayback.Views
 {
@@ -152,7 +154,7 @@ break;
 		}
 		private void StopCapture()
         {
-			keyboardHook.Uninstall();
+			keyboardHook.Stop();
 		}
 		private void CbxKeyAction_Initialized(object sender, EventArgs e)
 		{
@@ -975,15 +977,24 @@ break;
 
             }
 		}
-		private bool KeyboardHook_OnKeyboardEvent(uint key, BaseHook.KeyState keyState)
+		private void KeyBoardKeyDown(object sender, KeyEventArgs e)
 		{
 			KeyboardEvent kEvent = new KeyboardEvent
 			{
-				Key = (Keys)key,
-				Action = (keyState == BaseHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
+				Key = e.KeyCode,
+				Action = Constants.KEY_DOWN
 			};
 			LogKeyboardEvents(kEvent);
-			return false;
+		}
+
+		private void KeyBoardKeyUp(object sender, KeyEventArgs e)
+		{
+			KeyboardEvent kEvent = new KeyboardEvent
+			{
+				Key = e.KeyCode,
+				Action = Constants.KEY_UP
+			};
+			LogKeyboardEvents(kEvent);
 		}
 		private void LogKeyboardEvents(KeyboardEvent kEvent)
 		{
@@ -1009,8 +1020,9 @@ break;
 		}
 		private void Button_Click(object sender, RoutedEventArgs e)
         {
-			keyboardHook.Install();
-			keyboardHook.OnKeyboardEvent += KeyboardHook_OnKeyboardEvent;
+			keyboardHook.Start();
+			keyboardHook.KeyUp += KeyBoardKeyUp;
+			keyboardHook.KeyDown += KeyBoardKeyDown;
 
 		}
 

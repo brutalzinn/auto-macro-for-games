@@ -15,7 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using static MouseKeyboardLibrary.MouseHook;
-using static MouseKeyPlayback.MouseHook;
+
 
 namespace MouseKeyPlayback.Views
 {
@@ -43,7 +43,10 @@ namespace MouseKeyPlayback.Views
 			this.Top = mainWindow.Top + (mainWindow.Height - this.ActualHeight) / 2;
 		}
 
-
+        private void getMousePositionEvent(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
         protected override void OnClosed(EventArgs e)
 		{
@@ -61,7 +64,7 @@ namespace MouseKeyPlayback.Views
 
 		private void CbxMouseAction_Initialized(object sender, EventArgs e)
 		{
-			foreach (MouseEventType action in Enum.GetValues(typeof(MouseEventType)))
+			foreach (MouseActions action in Enum.GetValues(typeof(MouseActions)))
 			{
 				cbxMouseAction.Items.Add(action);
 			}
@@ -71,7 +74,7 @@ namespace MouseKeyPlayback.Views
 		{
 			int offset = 0;
 			var mouseButton = (MouseKeys)cbxMouseButton.SelectedItem;
-			var mouseAction = (MouseAction)cbxMouseAction.SelectedItem;
+			var mouseAction = (MouseActions)cbxMouseAction.SelectedItem;
 
 			if (mouseButton == MouseKeys.Left)
 			{
@@ -95,12 +98,12 @@ namespace MouseKeyPlayback.Views
 						new MouseEvent
 						{
 							Location = point,
-							Action = MouseEvents.LeftDown + offset
+							Action = MouseEventType.MouseDown + offset
 						},
 						new MouseEvent
 						{
 							Location = point,
-							Action = MouseEvents.LeftUp + offset
+							Action = MouseEventType.MouseUp + offset
 						}
 					};
 					break;
@@ -110,22 +113,22 @@ namespace MouseKeyPlayback.Views
 						new MouseEvent
 						{
 							Location = point,
-							Action = MouseEvents.LeftDown + offset
+							Action = MouseEventType.MouseDown + offset
 						},
 						new MouseEvent
 						{
 							Location = point,
-							Action = MouseEvents.LeftUp + offset
+							Action = MouseEventType.MouseUp + offset
 						},
 						new MouseEvent
 						{
 							Location = point,
-							Action = MouseEvents.LeftDown + offset
+							Action = MouseEventType.MouseDown + offset
 						},
 						new MouseEvent
 						{
 							Location = point,
-							Action = MouseEvents.LeftUp + offset
+							Action = MouseEventType.MouseUp + offset
 						}
 					};
 					break;
@@ -135,7 +138,7 @@ namespace MouseKeyPlayback.Views
 						new MouseEvent
 						{
 							Location = point,
-							Action = MouseEvents.LeftUp + offset
+							Action = MouseEventType.MouseUp + offset
 						}
 					};
 					break;
@@ -145,7 +148,7 @@ namespace MouseKeyPlayback.Views
 						new MouseEvent
 						{
 							Location = point,
-							Action = MouseEvents.LeftDown + offset
+							Action = MouseEventType.MouseDown + offset
 						}
 					};
 					break;
@@ -160,7 +163,7 @@ namespace MouseKeyPlayback.Views
 
 		private bool getMousePosition(int mouseEvent)
 		{
-			if(!this.IsMouseOver && (MouseHook.MouseEvents)mouseEvent == MouseHook.MouseEvents.LeftDown)
+			if(!this.IsMouseOver && (MouseHook.MouseEventType)mouseEvent == MouseHook.MouseEventType.MouseDown)
 			{
 				System.Drawing.Point point = System.Windows.Forms.Control.MousePosition;
 				x = point.X;
@@ -169,18 +172,6 @@ namespace MouseKeyPlayback.Views
 				tbxY.Text = point.Y.ToString();
 			}
 			return false;
-		}
-		private void getMousePositionEvent(object sender, System.Windows.Forms.MouseEventArgs e)
-		{
-			if (!this.IsMouseOver && (MouseHook.MouseEvents)e.Button == MouseHook.MouseEvents.LeftDown)
-			{
-				System.Drawing.Point point = System.Windows.Forms.Control.MousePosition;
-				x = point.X;
-				y = point.Y;
-				tbxX.Text = point.X.ToString();
-				tbxY.Text = point.Y.ToString();
-			}
-			
 		}
 		private void loadCbxMouseButton(MouseKeys value)
 		{
@@ -204,41 +195,19 @@ namespace MouseKeyPlayback.Views
 
                 switch (mouseRecordEvent.EventMouse.Action)
                 {
-					case MouseEvents.LeftDown:
+					case MouseHook.MouseEventType.MouseDown:
 
 						cbxMouseButton.SelectedItem = MouseKeys.Left;
 						cbxMouseAction.SelectedItem = MouseActions.Down;
-						Debug.WriteLine("LEFT BUTTON CLICK");
+						Debug.WriteLine("Mouse down");
 						break;
-					case MouseEvents.LeftUp:
+					case MouseHook.MouseEventType.MouseUp:
 						cbxMouseButton.SelectedItem = MouseKeys.Left;
 						cbxMouseAction.SelectedItem = MouseActions.Up;
-						Debug.WriteLine("LEFT BUTTON CLICK");
+						Debug.WriteLine("Mouse up");
 							
                         break;
-					case MouseEvents.RightUp:
-						cbxMouseButton.SelectedItem = MouseKeys.Right;
-						cbxMouseAction.SelectedItem = MouseActions.Up;
-						Debug.WriteLine("RIGHT BUTTON CLICK");
-						break;
-					case MouseEvents.RightDown:
-						cbxMouseButton.SelectedItem = MouseKeys.Right;
-						cbxMouseAction.SelectedItem = MouseActions.Down;
-						Debug.WriteLine("RIGHT BUTTON CLICK");
-
-						break;
-					case MouseEvents.MiddleUp:
-						cbxMouseButton.SelectedItem = MouseKeys.Middle;
-						cbxMouseAction.SelectedItem = MouseActions.Up;
-						Debug.WriteLine("Middle BUTTON CLICK");
-						break;
-					case MouseEvents.MiddleDown:
-
-						cbxMouseButton.SelectedItem = MouseKeys.Middle;
-						cbxMouseAction.SelectedItem = MouseActions.Down;
-						Debug.WriteLine("Middle BUTTON CLICK");
-
-						break;
+				
 					
 
 				
