@@ -1,62 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using System.Text;
 
-namespace MouseKeyPlayback
+namespace MouseKeyboardLibrary
 {
+
     /// <summary>
-    /// A low level system wide mouse hook which can be used to listen to all mouse events across the application.
+    /// Captures global mouse events
     /// </summary>
-    public class MouseHook : BaseHook
+    public class MouseHook : GlobalHook
     {
-        public delegate bool OnMouseMoveEventHandler(int x, int y);
 
-        /// <summary>
-        /// Called everytime the mouse moved.
-        /// </summary>
-        public event OnMouseMoveEventHandler OnMouseMove;
-
-        public delegate bool OnMouseEventHandler(int mouseEvent);
-
-        /// <summary>
-        /// When this event is being called, a mouseEvent will be delivered containing data about the mouse event occured.
-        /// They key parameter will return one the MouseKeys enum (if exists), if not it will contain the same mouseEvent data.
-        /// If the key exists in the MouseKeys enum, the key state will also contain the correct state of the key.
-        /// </summary>
-        public event OnMouseEventHandler OnMouseEvent;
-
-        public delegate bool OnMouseWheelEventHandler(int wheelValue);
-
-        /// <summary>
-        /// When a mouse wheel event occurs this event will be called.
-        /// You can detect if it's a normal mouse scroll using the MouseEventEvents enum.
-        /// </summary>
-        public event OnMouseWheelEventHandler OnMouseWheelEvent;
-
-        public MouseHook() : base(HookType.MouseHook)
-        {
-
-        }
-
-        #region Constants
+        #region MouseEventType Enum
         public enum MouseKeys
         {
             Left = MouseEvents.LeftDown,
             Middle = MouseEvents.MiddleDown,
             Right = MouseEvents.RightDown
-               
+
         }
-
-		public enum MouseActions
-		{
-			Click,
-			DoubleClick,
-			Up,
-			Down
-		}
-
+        public enum MouseEventType
+        {
+            None,
+            MouseDown,
+            MouseUp,
+            DoubleClick,
+            MouseWheel,
+            MouseMove
+        }
         public enum MouseEvents
         {
             LeftDown = 0x201,
@@ -74,77 +45,151 @@ namespace MouseKeyPlayback
             MouseMove = -1
         }
 
-        public enum MouseWheelEvents
-        {
-            ScrollUp = 7864320,
-            ScrollDown = -7864320
-        }
-        #endregion
-        #region Structures
-        public struct NativePoint
-        {
-            public int x;
-            public int y;
-        }
-
-        public struct MouseHookStruct
-        {
-            public NativePoint pt;
-            public int mouseData;
-            private int flags;
-            private int time;
-            private int dwExtraInfo;
-        }
         #endregion
 
+        #region Events
 
-        protected override IntPtr OnHookCall(int nCode, IntPtr wParam, IntPtr lParam)
+        public event MouseEventHandler MouseDown;
+        public event MouseEventHandler MouseUp;
+        public event MouseEventHandler MouseMove;
+        public event MouseEventHandler MouseWheel;
+
+        public event EventHandler Click;
+        public event EventHandler DoubleClick;
+
+        #endregion
+
+        #region Constructor
+
+        public MouseHook()
         {
-            MouseHookStruct mouseStruct = (MouseHookStruct) Marshal.PtrToStructure(lParam, typeof(MouseHookStruct));
-            IntPtr returnCall = OnMouseHookCall(nCode, wParam, mouseStruct);
-            if ((int)returnCall != 0) return returnCall;
 
-            return base.OnHookCall(nCode, wParam, lParam);
+            _hookType = WH_MOUSE_LL;
+
         }
 
-        /// <summary>
-        ///  Called when a mouse hook call had occured, use this instead of OnHookCall to read the mouse structure.
-        /// </summary>
-        /// <param name="nCode"></param>
-        /// <param name="wParam"></param>
-        /// <param name="mouseStruct"></param>
-        /// <returns></returns>
-        protected virtual IntPtr OnMouseHookCall(int nCode, IntPtr wParam, MouseHookStruct mouseStruct)
-        {
-            var consumeEvent = false;
+        #endregion
 
-            if ((nCode == LibConstants.HC_ACTION))
+        #region Methods
+
+        protected override int HookCallbackProcedure(int nCode, int wParam, IntPtr lParam)
+        {
+            if (nCode <= -1 || (MouseDown == null && MouseUp == null && MouseMove == null)) return CallNextHookEx(_handleToHook, nCode, wParam, lParam);
+            MouseLLHookStruct mouseHookStruct = (MouseLLHookStruct)Marshal.PtrToStructure(lParam, typeof(MouseLLHookStruct));
+
+            MouseButtons button = GetButton(wParam);
+            MouseEventType eventType = GetEventType(wParam);
+
+            MouseEventArgs e = new MouseEventArgs(
+                button,
+                (eventType == MouseEventType.DoubleClick ? 2 : 1),
+                mouseHookStruct.pt.x,
+                mouseHookStruct.pt.y,
+                (eventType == MouseEventType.MouseWheel ? (short)((mouseHookStruct.mouseData >> 16) & 0xffff) : 0));
+
+            // Prevent multiple Right Click events (this probably happens for popup menus)
+            if (button == MouseButtons.Right && mouseHookStruct.flags != 0)
             {
-                var wParamInt = (int)wParam;
-
-                if (wParamInt == LibConstants.WM_MOUSEMOVE)
-                {
-                    // If the mouse is moving
-                    if (OnMouseMove != null)
-                        consumeEvent = OnMouseMove(mouseStruct.pt.x, mouseStruct.pt.y);
-
-                }
-                else if (wParamInt == LibConstants.WM_MOUSEWHEEL)
-                {
-                    //If the wheel moved
-                    if (OnMouseWheelEvent != null)
-                        consumeEvent = OnMouseWheelEvent(mouseStruct.mouseData);
-                }
-                else
-                {
-                    // If a mouse event occured
-                    if (OnMouseEvent != null)
-                        consumeEvent = OnMouseEvent(wParamInt);
-                }
+                eventType = MouseEventType.None;
             }
 
-            if (consumeEvent) return (IntPtr)LibConstants.CONSUME_INPUT;
-            return IntPtr.Zero;
+            switch (eventType)
+            {
+                case MouseEventType.MouseDown:
+                    if (MouseDown != null)
+                    {
+                        MouseDown(this, e);
+                    }
+                    break;
+                case MouseEventType.MouseUp:
+                    if (Click != null)
+                    {
+                        Click(this, new EventArgs());
+                    }
+                    if (MouseUp != null)
+                    {
+                        MouseUp(this, e);
+                    }
+                    break;
+                case MouseEventType.DoubleClick:
+                    if (DoubleClick != null)
+                    {
+                        DoubleClick(this, new EventArgs());
+                    }
+                    break;
+                case MouseEventType.MouseWheel:
+                    if (MouseWheel != null)
+                    {
+                        MouseWheel(this, e);
+                    }
+                    break;
+                case MouseEventType.MouseMove:
+                    if (MouseMove != null)
+                    {
+                        MouseMove(this, e);
+                    }
+                    break;
+            }
+
+            return CallNextHookEx(_handleToHook, nCode, wParam, lParam);
+
         }
+
+        private static MouseButtons GetButton(Int32 wParam)
+        {
+
+            switch (wParam)
+            {
+
+                case WM_LBUTTONDOWN:
+                case WM_LBUTTONUP:
+                case WM_LBUTTONDBLCLK:
+                    return MouseButtons.Left;
+                case WM_RBUTTONDOWN:
+                case WM_RBUTTONUP:
+                case WM_RBUTTONDBLCLK:
+                    return MouseButtons.Right;
+                case WM_MBUTTONDOWN:
+                case WM_MBUTTONUP:
+                case WM_MBUTTONDBLCLK:
+                    return MouseButtons.Middle;
+                default:
+                    return MouseButtons.None;
+
+            }
+
+        }
+
+        private static MouseEventType GetEventType(Int32 wParam)
+        {
+
+            switch (wParam)
+            {
+
+                case WM_LBUTTONDOWN:
+                case WM_RBUTTONDOWN:
+                case WM_MBUTTONDOWN:
+                    return MouseEventType.MouseDown;
+                case WM_LBUTTONUP:
+                case WM_RBUTTONUP:
+                case WM_MBUTTONUP:
+                    return MouseEventType.MouseUp;
+                case WM_LBUTTONDBLCLK:
+                case WM_RBUTTONDBLCLK:
+                case WM_MBUTTONDBLCLK:
+                    return MouseEventType.DoubleClick;
+                case WM_MOUSEWHEEL:
+                    return MouseEventType.MouseWheel;
+                case WM_MOUSEMOVE:
+                    return MouseEventType.MouseMove;
+                default:
+                    return MouseEventType.None;
+
+            }
+        }
+
+        #endregion
+        
     }
+
 }

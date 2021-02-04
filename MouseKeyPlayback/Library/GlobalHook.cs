@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MouseKeyPlayback;
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -45,6 +46,16 @@ namespace MouseKeyboardLibrary
         protected const byte VK_RALT = 0xA5;
 
         protected const byte LLKHF_ALTDOWN = 0x20;
+        public enum KeyState
+        {
+            Keydown = 0,
+            Keyup = 1
+        }
+        public enum HookType
+        {
+            KeyboardHook = LibConstants.WH_KEYBOARD_LL,
+            MouseHook = LibConstants.WH_MOUSE_LL
+        }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         protected static extern int SetWindowsHookEx(

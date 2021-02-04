@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MouseKeyboardLibrary;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static MouseKeyboardLibrary.MouseHook;
 using static MouseKeyPlayback.MouseHook;
 
 namespace MouseKeyPlayback.Views
@@ -32,8 +34,8 @@ namespace MouseKeyPlayback.Views
 		{
 			InitializeComponent();
 
-			mouseHook.Install();
-			mouseHook.OnMouseEvent += getMousePosition;
+			mouseHook.Start();
+			mouseHook.MouseMove += getMousePositionEvent;
 
 			System.Windows.Application curApp = System.Windows.Application.Current;
 			Window mainWindow = curApp.MainWindow;
@@ -41,10 +43,12 @@ namespace MouseKeyPlayback.Views
 			this.Top = mainWindow.Top + (mainWindow.Height - this.ActualHeight) / 2;
 		}
 
-		protected override void OnClosed(EventArgs e)
+
+
+        protected override void OnClosed(EventArgs e)
 		{
 			base.OnClosed(e);
-			mouseHook.Uninstall();
+			mouseHook.Stop();
 		}
 
 		private void CbxMouseButton_Initialized(object sender, EventArgs e)
@@ -57,7 +61,7 @@ namespace MouseKeyPlayback.Views
 
 		private void CbxMouseAction_Initialized(object sender, EventArgs e)
 		{
-			foreach (MouseActions action in Enum.GetValues(typeof(MouseActions)))
+			foreach (MouseEventType action in Enum.GetValues(typeof(MouseEventType)))
 			{
 				cbxMouseAction.Items.Add(action);
 			}
@@ -67,7 +71,7 @@ namespace MouseKeyPlayback.Views
 		{
 			int offset = 0;
 			var mouseButton = (MouseKeys)cbxMouseButton.SelectedItem;
-			var mouseAction = (MouseActions)cbxMouseAction.SelectedItem;
+			var mouseAction = (MouseAction)cbxMouseAction.SelectedItem;
 
 			if (mouseButton == MouseKeys.Left)
 			{
@@ -165,6 +169,18 @@ namespace MouseKeyPlayback.Views
 				tbxY.Text = point.Y.ToString();
 			}
 			return false;
+		}
+		private void getMousePositionEvent(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			if (!this.IsMouseOver && (MouseHook.MouseEvents)e.Button == MouseHook.MouseEvents.LeftDown)
+			{
+				System.Drawing.Point point = System.Windows.Forms.Control.MousePosition;
+				x = point.X;
+				y = point.Y;
+				tbxX.Text = point.X.ToString();
+				tbxY.Text = point.Y.ToString();
+			}
+			
 		}
 		private void loadCbxMouseButton(MouseKeys value)
 		{

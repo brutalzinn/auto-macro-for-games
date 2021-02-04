@@ -1,6 +1,7 @@
 ﻿
 using GregsStack.InputSimulatorStandard;
 using GregsStack.InputSimulatorStandard.Native;
+using MouseKeyboardLibrary;
 using MouseKeyPlayback.Library;
 using MouseKeyPlayback.Utils;
 using MouseKeyPlayback.Views;
@@ -45,6 +46,8 @@ namespace MouseKeyPlayback
         private bool NeedExit { get; set; } = false;
         public List<Keys> KeyStopMacroCache { get; set; } = new List<Keys>();
         public List<Keys> KeyStopMacroStopKeys { get; set; } = new List<Keys>();
+     
+
         private System.Timers.Timer myTimer = new System.Timers.Timer(1000); //using System.Timers, 1000 means 1000 msec = 1 sec interval
         public InputSimulator simulator = new InputSimulator();
         public MainWindow()
@@ -156,24 +159,52 @@ namespace MouseKeyPlayback
             //mouseHook.OnMouseMove += MouseHook_OnMouseMove;
             //mouseHook.OnMouseWheelEvent += MouseHook_OnMouseWheelEvent;
             //mouseHook.Install();
-         
-            keyboardHook.OnKeyboardEvent += KeyboardHook_OnKeyboardEvent;
-            keyboardHookShots.OnKeyboardEvent += KeyboardHookShotups_OnKeyboardEvent;
-            mouseHook.OnMouseEvent += MouseHook_OnMouseEvent;
-            mouseHook.OnMouseMove += MouseHook_OnMouseMove;
-            mouseHook.OnMouseWheelEvent += MouseHook_OnMouseWheelEvent;
+            keyboardHook.KeyDown += KeyBoardHook_EventDown;
+
+            keyboardHook.KeyUp += KeyBoardHook_EventUp;
+            //keyboardHookShots.OnKeyboardEvent += KeyboardHookShotups_OnKeyboardEvent;
+            mouseHook.MouseDown += MouseHook_OnMouseEvent;
+            mouseHook.MouseUp += MouseHook_OnMouseEvent;
+            mouseHook.MouseMove += MouseHook_OnMouseMove;
+            mouseHook.MouseWheel += MouseHook_OnMouseWheelEvent;
             
+        }
+
+        private void KeyBoardHook_EventDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void KeyBoardHook_EventUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void MouseHook_OnMouseEvent(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void MouseHook_OnMouseWheelEvent(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            ProcessMouseEvent((MouseHook.MouseEvents)e.Button, 120);
+        }
+
+        private void MouseHook_OnMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+          
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            keyboardHook.Uninstall();
-            mouseHook.Uninstall();
+            keyboardHook.Stop();
+            mouseHook.Stop();
         }
 
         #region Mouse events
         private void ProcessMouseEvent(MouseHook.MouseEvents mAction, int mValue)
         {
+           
             CursorPoint mPoint = GetCurrentMousePosition();
             MouseEvent mEvent = new MouseEvent
             {
@@ -185,44 +216,30 @@ namespace MouseKeyPlayback
             LogMouseEvents(mEvent);
         }
 
-        private bool MouseHook_OnMouseWheelEvent(int wheelValue)
-        {
-            ProcessMouseEvent((MouseHook.MouseEvents)wheelValue, 120);
-            return false;
-        }
-
-        private bool MouseHook_OnMouseEvent(int mouseEvent)
-        {
-            ProcessMouseEvent((MouseHook.MouseEvents)mouseEvent, 0);
-            return false;
-        }
+       
 
 
-        private bool MouseHook_OnMouseMove(int x, int y)
-        {
-            ProcessMouseEvent(MouseHook.MouseEvents.MouseMove, 0);
-            return false;
-        }
+      
         #endregion
 
         #region Keyboard events
-        private bool KeyboardHook_OnKeyboardEvent(uint key, BaseHook.KeyState keyState)
+        private bool KeyboardHook_OnKeyboardEvent(uint key, GlobalHook.KeyState keyState)
         {
             KeyboardEvent kEvent = new KeyboardEvent {
                 Key = (Keys)key,
-                Action = (keyState == BaseHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
+                Action = (keyState == GlobalHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
             };
             LogKeyboardEvents(kEvent);
             return false;
         }
-        private bool KeyboardHookShotups_OnKeyboardEvent(uint key, BaseHook.KeyState keyState)
+        private bool KeyboardHookShotups_OnKeyboardEvent(uint key, GlobalHook.KeyState keyState)
         {
             Stopwatch sw = Stopwatch.StartNew();
 
             KeyboardEvent kEvent = new KeyboardEvent
             {
                 Key = (Keys)key,
-                Action = (keyState == BaseHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
+                Action = (keyState == GlobalHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
             };
 
 KeyStopMacroCache.Add(kEvent.Key);
@@ -272,10 +289,10 @@ StopMacro = true;
             }
                
 
-        keyboardHook.Install();
+        keyboardHook.Start();
 
             //keyboardHook.Install();
-            mouseHook.Install();
+            mouseHook.Start();
             isHooked = true;
 
             LaunchApp();
@@ -286,8 +303,8 @@ StopMacro = true;
         }
         private void StopRecord()
         {
-            keyboardHook.Uninstall();
-            mouseHook.Uninstall();
+            keyboardHook.Stop();
+            mouseHook.Stop();
             isHooked = false;
         }
         private void BtnStop_Click(object sender, RoutedEventArgs e)
@@ -610,7 +627,7 @@ StopMacro = true;
             StopMacro = false;
             KeyStopMacroCache.Clear();
             simulator = new InputSimulator();
-            Parallel.Invoke(() => keyboardHookShots.Install());
+            Parallel.Invoke(() => keyboardHookShots.Start());
 
             
             if (isHooked)
@@ -674,7 +691,7 @@ StopMacro = true;
             Console.WriteLine("Time total execution: {0}ms", sw.Elapsed.TotalMilliseconds);
 
 
-            keyboardHookShots.Uninstall();
+            keyboardHookShots.Stop();
 
         }
         private void BtnPlayback_Click(object sender, RoutedEventArgs e)

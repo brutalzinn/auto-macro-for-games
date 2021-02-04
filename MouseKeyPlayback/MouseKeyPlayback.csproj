@@ -90,8 +90,15 @@
     <Compile Include="InterfaceWindow.cs" />
     <Compile Include="Library\AppExportUtils.cs" />
     <Compile Include="Library\AppSettings.cs" />
+    <Compile Include="Library\GlobalHook.cs" />
     <Compile Include="Library\GlobalHotKeys.cs" />
     <Compile Include="Library\Globals.cs" />
+    <Compile Include="Library\Keyboard.cs" />
+    <Compile Include="Library\KeyboardHook.cs" />
+    <Compile Include="Library\KeyboardSimulator.cs" />
+    <Compile Include="Library\Mouse.cs" />
+    <Compile Include="Library\MouseHook.cs" />
+    <Compile Include="Library\MouseSimulator.cs" />
     <Compile Include="Library\StopPlayMacro.cs" />
     <Compile Include="Library\XMLUtils.cs" />
     <Compile Include="Views\ConfigPage.xaml.cs">
@@ -139,10 +146,7 @@
     <Compile Include="Helper\KeyboardUtils.cs" />
     <Compile Include="Helper\MouseUtils.cs" />
     <Compile Include="Helper\Win32Utils.cs" />
-    <Compile Include="Library\BaseHook.cs" />
     <Compile Include="Library\LibConstants.cs" />
-    <Compile Include="Library\KeyboardHook.cs" />
-    <Compile Include="Library\MouseHook.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
