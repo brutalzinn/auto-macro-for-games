@@ -939,7 +939,7 @@ LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = Constants.KEY
 		private System.Drawing.Point RecordToPoint(Record r)
 		{
             System.Drawing.Point result = System.Drawing.Point.Empty;
-          if (r != null) 
+          if (r.EventMouse != null) 
                 {
 			result= new System.Drawing.Point((int)r.EventMouse.Location.X, (int)r.EventMouse.Location.Y);
 
