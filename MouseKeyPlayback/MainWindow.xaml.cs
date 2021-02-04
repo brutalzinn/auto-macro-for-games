@@ -1,5 +1,6 @@
 ﻿
 using GregsStack.InputSimulatorStandard;
+using GregsStack.InputSimulatorStandard.Native;
 using MouseKeyPlayback.Library;
 using MouseKeyPlayback.Utils;
 using MouseKeyPlayback.Views;
@@ -154,6 +155,7 @@ namespace MouseKeyPlayback
             //mouseHook.OnMouseMove += MouseHook_OnMouseMove;
             //mouseHook.OnMouseWheelEvent += MouseHook_OnMouseWheelEvent;
             //mouseHook.Install();
+         
             keyboardHook.OnKeyboardEvent += KeyboardHook_OnKeyboardEvent;
             keyboardHookShots.OnKeyboardEvent += KeyboardHookShotups_OnKeyboardEvent;
             mouseHook.OnMouseEvent += MouseHook_OnMouseEvent;
