@@ -22,6 +22,7 @@ using System.Windows.Automation;
 using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 using System.Windows.Input;
+using static MouseKeyboardLibrary.GlobalHook;
 using static MouseKeyboardLibrary.MouseHook;
 using Point = System.Windows.Point;
 
@@ -188,12 +189,13 @@ namespace MouseKeyPlayback
 
         private void KeyBoardHook_EventDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            throw new NotImplementedException();
+            ProcessKeyboardEvent(KeyState.Keydown, e);
+                
         }
 
         private void KeyBoardHook_EventUp(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            throw new NotImplementedException();
+            ProcessKeyboardEvent(KeyState.Keyup, e);
         }
 
         private void MouseHook_OnMouseEvent(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -241,11 +243,11 @@ namespace MouseKeyPlayback
         #endregion
 
         #region Keyboard events
-        private bool KeyboardHook_OnKeyboardEvent(uint key, GlobalHook.KeyState keyState)
+        private bool ProcessKeyboardEvent(KeyState action, System.Windows.Forms.KeyEventArgs e)
         {
             KeyboardEvent kEvent = new KeyboardEvent {
-                Key = (Keys)key,
-                Action = (keyState == GlobalHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
+                Key = (Keys)e.KeyCode,
+                Action = (action == GlobalHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
             };
             LogKeyboardEvents(kEvent);
             return false;
