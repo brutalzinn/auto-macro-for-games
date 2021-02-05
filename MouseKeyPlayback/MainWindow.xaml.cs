@@ -22,6 +22,7 @@ using System.Windows.Automation;
 using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 using System.Windows.Input;
+using static MouseKeyboardLibrary.MouseHook;
 using Point = System.Windows.Point;
 
 namespace MouseKeyPlayback
@@ -163,11 +164,26 @@ namespace MouseKeyPlayback
 
             keyboardHook.KeyUp += KeyBoardHook_EventUp;
             //keyboardHookShots.OnKeyboardEvent += KeyboardHookShotups_OnKeyboardEvent;
-            mouseHook.MouseDown += MouseHook_OnMouseEvent;
-            mouseHook.MouseUp += MouseHook_OnMouseEvent;
-            mouseHook.MouseMove += MouseHook_OnMouseMove;
+            mouseHook.MouseDown += MouseHook_OnMouseEventDown;
+            mouseHook.MouseUp += MouseHook_OnMouseEventUp;
+           mouseHook.MouseMove += MouseHook_OnMouseMoveMove;
             mouseHook.MouseWheel += MouseHook_OnMouseWheelEvent;
             
+        }
+
+        private void MouseHook_OnMouseMoveMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            ProcessMouseEvent(MouseEventType.MouseMove, e);
+        }
+
+        private void MouseHook_OnMouseEventUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            ProcessMouseEvent(MouseEventType.MouseUp, e);
+        }
+
+        private void MouseHook_OnMouseEventDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            ProcessMouseEvent(MouseEventType.MouseDown, e);
         }
 
         private void KeyBoardHook_EventDown(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -188,7 +204,7 @@ namespace MouseKeyPlayback
 
         private void MouseHook_OnMouseWheelEvent(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-           // ProcessMouseEvent((MouseHook.MouseEvents)e.Button, 120);
+          ProcessMouseEvent(MouseEventType.MouseWheel, e);
         }
 
         private void MouseHook_OnMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -203,7 +219,7 @@ namespace MouseKeyPlayback
         }
 
         #region Mouse events
-        private void ProcessMouseEvent(MouseHook.MouseEvents mAction, int mValue)
+        private void ProcessMouseEvent(MouseEventType mAction, System.Windows.Forms.MouseEventArgs e)
         {
            
             CursorPoint mPoint = GetCurrentMousePosition();
@@ -211,7 +227,8 @@ namespace MouseKeyPlayback
             {
                 Location = mPoint,
                 Action = mAction,
-                Value = mValue
+                Button = e.Button,
+                Value = e.Delta
             };
 
             LogMouseEvents(mEvent);
@@ -336,7 +353,7 @@ StopMacro = true;
         private void TrackAutomationElement(Record item)
         {
             if (item.Type == Constants.MOUSE
-                && item.EventMouse.Action == MouseHook.MouseEvents.LeftUp)
+                && item.EventMouse.Action == MouseHook.MouseEventType.MouseUp)
             {
                 var windowTitle = Win32Utils.GetActiveWindowTitle();
                 var position = Control.MousePosition;
@@ -602,7 +619,7 @@ StopMacro = true;
                     {
                         case Constants.MOUSE:
                             var lastAction = lastItem.EventMouse.Action;
-                            if (lastAction == MouseHook.MouseEvents.MouseMove
+                            if (lastAction == MouseHook.MouseEventType.MouseMove
                                 && item.EventMouse.Action == lastAction)
                                 
                                 this.listView.Items.RemoveAt(this.listView.Items.Count - 1);
@@ -703,8 +720,8 @@ StopMacro = true;
         private void PlaybackMouse(Record record)
         {
             CursorPoint newPos = record.EventMouse.Location;
-            MouseHook.MouseEvents mEvent = record.EventMouse.Action;
-            MouseUtils.PerformMouseEvent(simulator,mEvent, newPos);
+       
+            MouseUtils.PerformMouseEvent(simulator, record.EventMouse, newPos);
         }
 
         private void PlaybackKeyboard(Record record)
@@ -887,13 +904,13 @@ LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = Constants.KEY
 			int id = item.Id;
 			System.Drawing.Pen pen = new System.Drawing.Pen(System.Drawing.Color.Red, 3);
 
-			if (item.EventMouse.Action == MouseHook.MouseEvents.MouseMove)
+			if (item.EventMouse.Action == MouseHook.MouseEventType.MouseMove)
 			{
 				Record last = recordList.FindLast(r => 
 				{
 					if (r.EventMouse == null)
 						return false;
-					return r.Id < id && r.EventMouse.Action != MouseHook.MouseEvents.MouseMove;
+					return r.Id < id && r.EventMouse.Action != MouseHook.MouseEventType.MouseMove;
 				});
 				if (last == null)
 				{

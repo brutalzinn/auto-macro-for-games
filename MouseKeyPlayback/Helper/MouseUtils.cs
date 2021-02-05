@@ -2,6 +2,7 @@
 using MouseKeyboardLibrary;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace MouseKeyPlayback
 {
@@ -14,7 +15,7 @@ namespace MouseKeyPlayback
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(uint dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
 
-        public static void PerformMouseEvent(InputSimulator instance,MouseHook.MouseEvents mEvent, CursorPoint location)
+        public static void PerformMouseEvent(InputSimulator instance, MouseEvent mEvent, CursorPoint location)
         {
          
 
@@ -22,37 +23,52 @@ namespace MouseKeyPlayback
             int y = (int)location.Y;
             SetCursorPos(x, y);
 
-            switch (mEvent)
+            switch (mEvent.Action)
             {
 
-                case MouseHook.MouseEvents.LeftDown:
+                case MouseHook.MouseEventType.MouseUp:
+                    switch (mEvent.Button)
+                    {
+                        case MouseButtons.Left:
                     instance.Mouse.MoveMouseBy(x,y);
-                    instance.Mouse.LeftButtonDown();
-                 //   mouse_event(Constants.MOUSEEVENT_LEFTDOWN, x, y, 0, 0);
-                    break;
-                case MouseHook.MouseEvents.LeftUp:
-                    instance.Mouse.MoveMouseBy(x, y);
                     instance.Mouse.LeftButtonUp();
+                            break;
+                        case MouseButtons.Right:
+                            instance.Mouse.MoveMouseBy(x, y);
+                            instance.Mouse.RightButtonUp();
+                            break;
+                        case MouseButtons.Middle:
+                            instance.Mouse.MoveMouseBy(x, y);
+                            instance.Mouse.MiddleButtonUp();
+                            break;
+                    }
+                    
                     break;
-                case MouseHook.MouseEvents.RightDown:
-                    instance.Mouse.MoveMouseBy(x, y);
-                    instance.Mouse.RightButtonDown();
+                case MouseHook.MouseEventType.MouseDown:
+                    switch (mEvent.Button)
+                    {
+                        case MouseButtons.Left:
+                            instance.Mouse.MoveMouseBy(x, y);
+                            instance.Mouse.LeftButtonDown();
+                            break;
+                        case MouseButtons.Right:
+                            instance.Mouse.MoveMouseBy(x, y);
+                            instance.Mouse.RightButtonDown();
+                            break;
+                        case MouseButtons.Middle:
+                            instance.Mouse.MoveMouseBy(x, y);
+                            instance.Mouse.MiddleButtonDown();
+                            break;
+                    }
                     break;
-                case MouseHook.MouseEvents.RightUp:
-                    instance.Mouse.MoveMouseBy(x, y);
-                    instance.Mouse.RightButtonUp();
+                case MouseHook.MouseEventType.MouseWheel:
 
+                    instance.Mouse.MouseWheelClickSize = mEvent.Value;
                     break;
-                case MouseHook.MouseEvents.ScrollDown:
-                
-                    mouse_event(Constants.MOUSEEVENTF_WHEEL, 0, 0, -120, 0);
-                    break;
-                case MouseHook.MouseEvents.ScrollUp:
-                    mouse_event(Constants.MOUSEEVENTF_WHEEL, 0, 0, 120, 0);
-                    break;
+
             }
 
-            if (mEvent != MouseHook.MouseEvents.MouseMove)
+            if (mEvent.Action != MouseHook.MouseEventType.MouseMove)
                 Thread.Sleep(30);
         }
     }
