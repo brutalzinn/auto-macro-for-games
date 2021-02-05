@@ -2,6 +2,8 @@
 using MouseKeyboardLibrary;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows.Forms;
+using static MouseKeyboardLibrary.MouseHook;
 
 namespace MouseKeyPlayback
 {
@@ -14,27 +16,27 @@ namespace MouseKeyPlayback
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(uint dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
 
-        public static void PerformMouseEvent(InputSimulator instance,MouseHook.MouseEvents mEvent, CursorPoint location)
+        public static void PerformMouseEvent(InputSimulator instance, Record mEvent, CursorPoint location)
         {
          
 
             int x = (int)location.X;
             int y = (int)location.Y;
             SetCursorPos(x, y);
-
-            switch (mEvent)
+          
+            switch (mEvent.EventMouse.Action)
             {
 
-                case MouseHook.MouseEvents.LeftDown:
+                case MouseActions.Down:
                     instance.Mouse.MoveMouseBy(x,y);
                     instance.Mouse.LeftButtonDown();
                  //   mouse_event(Constants.MOUSEEVENT_LEFTDOWN, x, y, 0, 0);
                     break;
-                case MouseHook.MouseEvents.LeftUp:
+                case MouseActions.Up
                     instance.Mouse.MoveMouseBy(x, y);
                     instance.Mouse.LeftButtonUp();
                     break;
-                case MouseHook.MouseEvents.RightDown:
+                case MouseButtons.Right:
                     instance.Mouse.MoveMouseBy(x, y);
                     instance.Mouse.RightButtonDown();
                     break;

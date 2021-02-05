@@ -24,6 +24,22 @@ namespace MouseKeyboardLibrary
             MouseWheel,
             MouseMove
         }
+        public enum MouseEvents
+        {
+            LeftDown = 0x201,
+            LeftUp = 0x202,
+            LeftDoubleClick = 0x203,
+            RightDown = 0x204,
+            RightUp = 0x205,
+            RightDoubleClick = 0x206,
+            MiddleDown = 0x207,
+            MiddleUp = 0x208,
+            MiddleDoubleClick = 0x209,
+            MouseScroll = 0x20a,
+            ScrollUp = 7864320,
+            ScrollDown = -7864320,
+            MouseMove = -1
+        }
         public enum MouseActions
         {
             Click,

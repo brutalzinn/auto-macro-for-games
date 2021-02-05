@@ -22,6 +22,7 @@ using System.Windows.Automation;
 using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 using System.Windows.Input;
+using static MouseKeyboardLibrary.MouseHook;
 using Point = System.Windows.Point;
 
 namespace MouseKeyPlayback
@@ -163,11 +164,23 @@ namespace MouseKeyPlayback
 
             keyboardHook.KeyUp += KeyBoardHook_EventUp;
             //keyboardHookShots.OnKeyboardEvent += KeyboardHookShotups_OnKeyboardEvent;
-            mouseHook.MouseDown += MouseHook_OnMouseEvent;
-            mouseHook.MouseUp += MouseHook_OnMouseEvent;
+            mouseHook.MouseDown += MouseHook_OnMouseEventDown;
+            mouseHook.MouseUp += MouseHook_OnMouseEventUp;
             mouseHook.MouseMove += MouseHook_OnMouseMove;
             mouseHook.MouseWheel += MouseHook_OnMouseWheelEvent;
             
+        }
+
+        private void MouseHook_OnMouseEventUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            ProcessMouseEvent(e, MouseHook.MouseActions.Up);
+
+        }
+
+        private void MouseHook_OnMouseEventDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            ProcessMouseEvent(e, MouseHook.MouseActions.Down);
+
         }
 
         private void KeyBoardHook_EventDown(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -177,18 +190,17 @@ namespace MouseKeyPlayback
 
         private void KeyBoardHook_EventUp(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            throw new NotImplementedException();
         }
 
         private void MouseHook_OnMouseEvent(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-          
-            throw new NotImplementedException();
+    
         }
 
         private void MouseHook_OnMouseWheelEvent(object sender, System.Windows.Forms.MouseEventArgs e)
         {
            // ProcessMouseEvent((MouseHook.MouseEvents)e.Button, 120);
+           
         }
 
         private void MouseHook_OnMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -203,15 +215,17 @@ namespace MouseKeyPlayback
         }
 
         #region Mouse events
-        private void ProcessMouseEvent(MouseHook.MouseEvents mAction, int mValue)
+        private void ProcessMouseEvent(System.Windows.Forms.MouseEventArgs e, MouseActions action)
         {
-           
+        
             CursorPoint mPoint = GetCurrentMousePosition();
             MouseEvent mEvent = new MouseEvent
             {
+               
                 Location = mPoint,
-                Action = mAction,
-                Value = mValue
+                Action = action,
+                Button = e.Button
+                
             };
 
             LogMouseEvents(mEvent);
