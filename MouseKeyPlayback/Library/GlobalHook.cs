@@ -48,6 +48,7 @@ namespace MouseKeyboardLibrary
         protected const byte LLKHF_ALTDOWN = 0x20;
         public enum KeyState
         {
+            None = -1,
             Keydown = 0,
             Keyup = 1
         }

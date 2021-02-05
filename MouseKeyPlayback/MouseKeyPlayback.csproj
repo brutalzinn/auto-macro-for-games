@@ -96,6 +96,7 @@
     <Compile Include="Library\Keyboard.cs" />
     <Compile Include="Library\KeyboardHook.cs" />
     <Compile Include="Library\KeyboardSimulator.cs" />
+    <Compile Include="Library\Macro.cs" />
     <Compile Include="Library\Mouse.cs" />
     <Compile Include="Library\MouseHook.cs" />
     <Compile Include="Library\MouseSimulator.cs" />

@@ -52,7 +52,7 @@ namespace MouseKeyPlayback.Views
             KeyboardEvent kEvent = new KeyboardEvent
             {
                 Key = e.KeyCode,
-                Action = Constants.KEY_DOWN
+                Action = GlobalHook.KeyState.Keydown
             };
             LogKeyboardEvents(kEvent);
         }
@@ -62,7 +62,7 @@ namespace MouseKeyPlayback.Views
             KeyboardEvent kEvent = new KeyboardEvent
             {
                 Key = e.KeyCode,
-                Action = Constants.KEY_UP
+                Action = GlobalHook.KeyState.Keyup
             };
             LogKeyboardEvents(kEvent);
         }
@@ -73,7 +73,7 @@ namespace MouseKeyPlayback.Views
             KeyboardEvent kEvent = new KeyboardEvent
             {
                 Key = (Keys)key,
-                Action = (keyState == GlobalHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
+                Action = keyState
             };
             LogKeyboardEvents(kEvent);
             return false;
@@ -99,7 +99,7 @@ namespace MouseKeyPlayback.Views
            if (!ListenToKeys) return;
 
             Debug.WriteLine(kEvent.Action);
-            if (kEvent.Action == Constants.KEY_DOWN)
+            if (kEvent.Action == GlobalHook.KeyState.Keydown)
             {
                 if (kEvent.Key.HasFlag(Control.ModifierKeys))
                 {

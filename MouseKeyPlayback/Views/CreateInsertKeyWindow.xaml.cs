@@ -62,12 +62,12 @@ namespace MouseKeyPlayback.Views
 						new KeyboardEvent
 						{
 							Key = (System.Windows.Forms.Keys)keyName,
-							Action = Constants.KEY_DOWN
+							Action = GlobalHook.KeyState.Keydown
 						},
 						new KeyboardEvent
 						{
 							Key = (System.Windows.Forms.Keys)keyName,
-							Action = Constants.KEY_UP
+							Action = GlobalHook.KeyState.Keyup
 						}
 					};
 					break;
@@ -77,7 +77,7 @@ namespace MouseKeyPlayback.Views
 						new KeyboardEvent
 						{
 							Key = (System.Windows.Forms.Keys)keyName,
-							Action = Constants.KEY_DOWN
+							Action = GlobalHook.KeyState.Keydown
 						}
 					};
 					break;
@@ -87,7 +87,7 @@ namespace MouseKeyPlayback.Views
 						new KeyboardEvent
 						{
 							Key = (System.Windows.Forms.Keys)keyName,
-							Action = Constants.KEY_UP
+							Action =GlobalHook.KeyState.Keyup
 						}
 					};
 					break;
@@ -107,12 +107,12 @@ namespace MouseKeyPlayback.Views
 						new KeyboardEvent
 						{
 							Key = CapturedKeys,
-							Action = Constants.KEY_DOWN
+							Action = GlobalHook.KeyState.Keydown
 						},
 						new KeyboardEvent
 						{
 							Key = CapturedKeys,
-							Action = Constants.KEY_UP
+							Action = GlobalHook.KeyState.Keyup
 						}
 					};
 break;
@@ -122,7 +122,7 @@ break;
 						new KeyboardEvent
 						{
 							Key = CapturedKeys,
-							Action = Constants.KEY_DOWN
+							Action = GlobalHook.KeyState.Keydown
 						}
 					};
 break;
@@ -132,7 +132,7 @@ break;
 						new KeyboardEvent
 						{
 							Key = CapturedKeys,
-							Action = Constants.KEY_UP
+							Action = GlobalHook.KeyState.Keyup
 						}
 					};
 break;
@@ -933,11 +933,11 @@ break;
 		}
 
 	
-		public void loadCbxKeyAction(string value)
+		public void loadCbxKeyAction(GlobalHook.KeyState value)
         {
-            foreach (KeyValuePair<KeyAction, string> item in cbxKeyAction.Items)
+            foreach (KeyValuePair<GlobalHook.KeyState, string> item in cbxKeyAction.Items)
             {
-            if(item.Value == value)
+            if(item.Key == value)
                 {
 					cbxKeyAction.SelectedItem = item;
 
@@ -965,12 +965,12 @@ break;
 
 				switch (keyboardConfig.EventKey.Action)
                 {
-					case Constants.KEY_UP:
-						loadCbxKeyAction("Up");
+					case GlobalHook.KeyState.Keyup:
+						loadCbxKeyAction(GlobalHook.KeyState.Keyup);
 							break;
 
-					case Constants.KEY_DOWN:
-						loadCbxKeyAction("Down");
+					case GlobalHook.KeyState.Keydown:
+						loadCbxKeyAction(GlobalHook.KeyState.Keydown);
 						break;
 				}
 				loadCbxKeyName((Key)keyboardConfig.EventKey.Key);
@@ -982,7 +982,7 @@ break;
 			KeyboardEvent kEvent = new KeyboardEvent
 			{
 				Key = e.KeyCode,
-				Action = Constants.KEY_DOWN
+				Action = GlobalHook.KeyState.Keydown
 			};
 			LogKeyboardEvents(kEvent);
 		}
@@ -992,7 +992,7 @@ break;
 			KeyboardEvent kEvent = new KeyboardEvent
 			{
 				Key = e.KeyCode,
-				Action = Constants.KEY_UP
+				Action = GlobalHook.KeyState.Keyup
 			};
 			LogKeyboardEvents(kEvent);
 		}

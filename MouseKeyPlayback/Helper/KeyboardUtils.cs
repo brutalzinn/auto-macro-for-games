@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static MouseKeyboardLibrary.GlobalHook;
 
 namespace MouseKeyPlayback
 {
@@ -35,18 +36,18 @@ namespace MouseKeyPlayback
             return myChar;
         }
 
-        public static void PerformKeyEvent(InputSimulator instance, Keys key, string action)
+        public static void PerformKeyEvent(InputSimulator instance, Keys key, KeyState action)
         {
            
 
             switch (action)
             {
-                case Constants.KEY_DOWN:
+                case KeyState.Keydown:
                     //      keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY, 0);
                     instance.Keyboard.KeyDown((VirtualKeyCode)key);
 
                     break;
-                case Constants.KEY_UP:
+                case KeyState.Keyup:
                     //       keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
 
                     // SimKeyboard.KeyUp((byte)key);

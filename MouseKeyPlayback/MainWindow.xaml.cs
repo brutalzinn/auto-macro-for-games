@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -36,12 +37,17 @@ namespace MouseKeyPlayback
         #region Private Properties
         private KeyboardHook keyboardHook = new KeyboardHook();
         private KeyboardHook keyboardHookShots = new KeyboardHook();
+        private MouseEventType lastKeyMouseButton { get; set; }
+        private KeyboardEvent lastKeyKeyboardButton { get; set; }
+
+        private int lastTimeRecorded;
 
         private MouseHook mouseHook = new MouseHook();
         private int count = 0;
         private bool isHooked = false;
         private bool StopMacro = false;
         private List<Record> recordList;
+        private List<Record> recordCacheList;
         #endregion
 
         private volatile bool m_StopThread = false;
@@ -189,13 +195,21 @@ namespace MouseKeyPlayback
 
         private void KeyBoardHook_EventDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            ProcessKeyboardEvent(KeyState.Keydown, e);
-                
+           
+           if( ProcessKeyboardEvent(KeyState.Keydown, e) == false)
+            {
+                e.SuppressKeyPress = true;
+            }
+           
+
         }
 
         private void KeyBoardHook_EventUp(object sender, System.Windows.Forms.KeyEventArgs e)
         {
             ProcessKeyboardEvent(KeyState.Keyup, e);
+          
+
+
         }
 
         private void MouseHook_OnMouseEvent(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -232,8 +246,8 @@ namespace MouseKeyPlayback
                 Button = e.Button,
                 Value = e.Delta
             };
-
-            LogMouseEvents(mEvent);
+          
+             LogMouseEvents(mEvent);
         }
 
        
@@ -247,10 +261,16 @@ namespace MouseKeyPlayback
         {
             KeyboardEvent kEvent = new KeyboardEvent {
                 Key = (Keys)e.KeyCode,
-                Action = (action == GlobalHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
+                Action = action
             };
+            if (lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action == kEvent.Action && lastKeyKeyboardButton.Key == kEvent.Key)
+            {
+                return false;
+            }
+
             LogKeyboardEvents(kEvent);
-            return false;
+            return true;
+          //  return false;
         }
         private bool KeyboardHookShotups_OnKeyboardEvent(uint key, GlobalHook.KeyState keyState)
         {
@@ -259,7 +279,7 @@ namespace MouseKeyPlayback
             KeyboardEvent kEvent = new KeyboardEvent
             {
                 Key = (Keys)key,
-                Action = (keyState == GlobalHook.KeyState.Keydown) ? Constants.KEY_DOWN : Constants.KEY_UP
+                Action = keyState
             };
 
 KeyStopMacroCache.Add(kEvent.Key);
@@ -284,6 +304,8 @@ StopMacro = true;
 
         private void StartRecord()
         {
+            lastTimeRecorded = Environment.TickCount;
+            recordCacheList = new List<Record>();
             if (isHooked)
                 return;
             if (listView.Items.Count > 0)
@@ -307,12 +329,14 @@ StopMacro = true;
                 recordList = new List<Record>();
                 count = 0;
             }
-               
 
-        keyboardHook.Start();
+
+
+
 
             //keyboardHook.Install();
-            mouseHook.Start();
+            Parallel.Invoke(mouseHook.Start);
+            Parallel.Invoke(keyboardHook.Start);
             isHooked = true;
 
             LaunchApp();
@@ -323,6 +347,7 @@ StopMacro = true;
         }
         private void StopRecord()
         {
+            recordCacheList = new List<Record>();
             keyboardHook.Stop();
             mouseHook.Stop();
             isHooked = false;
@@ -467,7 +492,8 @@ StopMacro = true;
                 Type = Constants.MOUSE,
                 Content = String.Format("{0} was triggered at ({1}, {2})", mEvent.Action, mEvent.Location.X, mEvent.Location.Y)
             };
-
+           
+          
             CheckDelayActions(item);
 
         }
@@ -476,6 +502,18 @@ StopMacro = true;
 
      private void CheckDelayActions(Record item)
         {
+            if(item.EventMouse != null)
+            {
+                return;
+            }
+            Record itemWaitNormal = new Record
+            {
+                Id = count,
+                WaitMs = Environment.TickCount - lastTimeRecorded,
+                Type = Constants.WAIT,
+                Content = $"Wait {Environment.TickCount - lastTimeRecorded} "
+            };
+
             if (CheckBoxRandom.IsChecked.Value)
             {
                 Record itemWait = new Record
@@ -499,41 +537,26 @@ StopMacro = true;
                     AddRecordItem(itemWait);
                 }
 
-
             }
-
             else if (CheckBoxDelay.IsChecked.Value)
+            { 
+                    AddRecordItem(item);
+            } 
+ 
+            int index = recordList.IndexOf(item);
+
+         
+            if (index - 2 > 0)
             {
-
-               
-                Record itemWait = new Record
+                if (recordList[index - 2].EventKey != null)
                 {
-                    Id = count,
-
-                    WaitMs = Convert.ToInt32(TextBoxDelayTime.Text),
-                    Type = Constants.WAIT,
-                    Content = $"Wait {Convert.ToInt32(TextBoxDelayTime.Text)} "
-                };
-
-
-
-
-
-                if (ApplicationSettingsManager.Settings.BetweenKeys)
-                {
-                    AddRecordItem(itemWait);
-                    AddRecordItem(item);
-
-                }
-                else if (ApplicationSettingsManager.Settings.ForeachKeys)
-                {
-                    AddRecordItem(item);
-                    AddRecordItem(itemWait);
+                    lastKeyKeyboardButton = recordList[index - 2].EventKey;
+                    Debug.WriteLine("bloqueando");
                 }
             }
-            else
+            if (lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action != item.EventKey.Action && lastKeyKeyboardButton.Key == item.EventKey.Key)
             {
-                AddRecordItem(item);
+                AddRecordItem(itemWaitNormal);
             }
         }
         
@@ -547,12 +570,18 @@ StopMacro = true;
                 Type = Constants.KEYBOARD,
                 EventKey = kEvent,
                 Content = String.Format("{0} was {1}", kEvent.Key.ToString(),
-                    (kEvent.Action == Constants.KEY_DOWN) ? "pressed" : "released")
+                    (kEvent.Action == KeyState.Keydown) ? "pressed" : "released")
             };
-            CheckDelayActions(item);
+
+          
+              CheckDelayActions(item);
+           lastTimeRecorded = Environment.TickCount;
+
+            
+
         }
 
-   
+
 
         private void LogWaitEvent(Record record)
 		{
@@ -646,8 +675,9 @@ StopMacro = true;
         {
             StopMacro = false;
             KeyStopMacroCache.Clear();
+            recordCacheList = new List<Record>();
             simulator = new InputSimulator();
-            Parallel.Invoke(() => keyboardHookShots.Start());
+         //   Parallel.Invoke(() => keyboardHookShots.Start());
 
             
             if (isHooked)
@@ -711,7 +741,7 @@ StopMacro = true;
             Console.WriteLine("Time total execution: {0}ms", sw.Elapsed.TotalMilliseconds);
 
 
-            keyboardHookShots.Stop();
+         //   keyboardHookShots.Stop();
 
         }
         private void BtnPlayback_Click(object sender, RoutedEventArgs e)
@@ -730,7 +760,7 @@ StopMacro = true;
         {
           
             Keys key = record.EventKey.Key;
-            string action = record.EventKey.Action;
+            KeyState action = record.EventKey.Action;
 
             KeyboardUtils.PerformKeyEvent(simulator,key, action);
         }
@@ -853,18 +883,18 @@ StopMacro = true;
                         key = (Keys)Enum.Parse(typeof(Keys), RemoveDiacritics(code.ToString()));
 
                         }
-LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = Constants.KEY_DOWN });
+LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = KeyState.Keydown });
 
-                            LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = Constants.KEY_UP });
+                            LogKeyboardEvents(new KeyboardEvent { Key = key_especial, Action = KeyState.Keyup });
 
                     }
                             
                         
                     
                     
-					LogKeyboardEvents(new KeyboardEvent { Key = key, Action = Constants.KEY_DOWN });
+					LogKeyboardEvents(new KeyboardEvent { Key = key, Action = KeyState.Keydown });
 				
-                    LogKeyboardEvents(new KeyboardEvent { Key = key, Action = Constants.KEY_UP });
+                    LogKeyboardEvents(new KeyboardEvent { Key = key, Action = KeyState.Keyup });
                
                 }
               
@@ -1165,7 +1195,7 @@ Move(-1);
                 Type = Constants.KEYBOARD,
                 EventKey = kEvent,
                 Content = String.Format("{0} was {1}", kEvent.Key.ToString(),
-                  (kEvent.Action == Constants.KEY_DOWN) ? "pressed" : "released")
+                  (kEvent.Action == KeyState.Keydown) ? "pressed" : "released")
             };
             foreach (Record itemRecord in listView.Items)
             {
