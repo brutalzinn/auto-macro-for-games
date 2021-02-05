@@ -137,8 +137,13 @@ namespace MouseKeyPlayback
                 KeyStopMacroStopKeys.Add(itemb);
                 Debug.WriteLine("ITEMNONMODIFIER:" + itemb);
             }
+            KeyboardEvent kEvent = new KeyboardEvent
+            {
+                Key = Keys.None,
+                Action = KeyState.Keydown
+            };
+            lastKeyKeyboardButton = kEvent;
 
-            
         }
         private void StopMacroKey()
         {
@@ -195,7 +200,7 @@ namespace MouseKeyPlayback
 
         private void KeyBoardHook_EventDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            if (lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action == KeyState.Keyup && lastKeyKeyboardButton.Key == e.KeyCode || lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action == KeyState.Keyup && lastKeyKeyboardButton.Key != e.KeyCode)
+           if (lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action == KeyState.Keyup && lastKeyKeyboardButton.Key == e.KeyCode || lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action == KeyState.Keyup && lastKeyKeyboardButton.Key != e.KeyCode)
             {
                 return;
             }
@@ -207,7 +212,7 @@ namespace MouseKeyPlayback
 
         private void KeyBoardHook_EventUp(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            if (lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action == KeyState.Keydown && lastKeyKeyboardButton.Key == e.KeyCode)
+            if (lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action == KeyState.Keydown && lastKeyKeyboardButton.Key == e.KeyCode || lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action == KeyState.Keydown && lastKeyKeyboardButton.Key == e.KeyCode)
             {
                 return;
             }
@@ -546,18 +551,13 @@ StopMacro = true;
             } 
  
             int index = recordList.IndexOf(item);
-
-         
             if (index - 2 > 0)
             {
                 if (recordList[index - 2].EventKey != null)
                 {
-                    lastKeyKeyboardButton = recordList[index - 2].EventKey;
-                 
+                    lastKeyKeyboardButton = recordList[index - 2].EventKey;          
                 }
             }
-         
-           
                 AddRecordItem(itemWaitNormal);
             
         }
