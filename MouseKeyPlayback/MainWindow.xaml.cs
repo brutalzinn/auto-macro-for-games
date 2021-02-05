@@ -195,19 +195,24 @@ namespace MouseKeyPlayback
 
         private void KeyBoardHook_EventDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-           
-           if( ProcessKeyboardEvent(KeyState.Keydown, e) == false)
+            if (lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action == KeyState.Keyup && lastKeyKeyboardButton.Key == e.KeyCode || lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action == KeyState.Keyup && lastKeyKeyboardButton.Key != e.KeyCode)
             {
-                e.SuppressKeyPress = true;
+                return;
             }
-           
+            ProcessKeyboardEvent(KeyState.Keydown, e);
+            lastTimeRecorded = Environment.TickCount;
+
 
         }
 
         private void KeyBoardHook_EventUp(object sender, System.Windows.Forms.KeyEventArgs e)
         {
+            if (lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action == KeyState.Keydown && lastKeyKeyboardButton.Key == e.KeyCode)
+            {
+                return;
+            }
             ProcessKeyboardEvent(KeyState.Keyup, e);
-          
+            lastTimeRecorded = Environment.TickCount;
 
 
         }
@@ -257,19 +262,16 @@ namespace MouseKeyPlayback
         #endregion
 
         #region Keyboard events
-        private bool ProcessKeyboardEvent(KeyState action, System.Windows.Forms.KeyEventArgs e)
+        private void ProcessKeyboardEvent(KeyState action, System.Windows.Forms.KeyEventArgs e)
         {
             KeyboardEvent kEvent = new KeyboardEvent {
                 Key = (Keys)e.KeyCode,
                 Action = action
             };
-            if (lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action == kEvent.Action && lastKeyKeyboardButton.Key == kEvent.Key)
-            {
-                return false;
-            }
+        
 
             LogKeyboardEvents(kEvent);
-            return true;
+            return;
           //  return false;
         }
         private bool KeyboardHookShotups_OnKeyboardEvent(uint key, GlobalHook.KeyState keyState)
@@ -551,13 +553,13 @@ StopMacro = true;
                 if (recordList[index - 2].EventKey != null)
                 {
                     lastKeyKeyboardButton = recordList[index - 2].EventKey;
-                    Debug.WriteLine("bloqueando");
+                 
                 }
             }
-            if (lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action != item.EventKey.Action && lastKeyKeyboardButton.Key == item.EventKey.Key)
-            {
+         
+           
                 AddRecordItem(itemWaitNormal);
-            }
+            
         }
         
 
@@ -575,7 +577,6 @@ StopMacro = true;
 
           
               CheckDelayActions(item);
-           lastTimeRecorded = Environment.TickCount;
 
             
 
