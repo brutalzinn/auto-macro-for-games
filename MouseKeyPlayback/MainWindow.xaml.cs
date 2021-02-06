@@ -54,7 +54,8 @@ namespace MouseKeyPlayback
         private bool NeedExit { get; set; } = false;
         public List<Keys> KeyStopMacroCache { get; set; } = new List<Keys>();
         public List<Keys> KeyStopMacroStopKeys { get; set; } = new List<Keys>();
-        public bool keyDown = false;
+        public bool KeyDown = false;
+        public bool MouseDown = false;
 
         private System.Timers.Timer myTimer = new System.Timers.Timer(1000); //using System.Timers, 1000 means 1000 msec = 1 sec interval
         public InputSimulator simulator = new InputSimulator();
@@ -182,32 +183,42 @@ namespace MouseKeyPlayback
         private void MouseHook_OnMouseMoveMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             ProcessMouseEvent(MouseEventType.MouseMove, e);
+            lastTimeRecorded = Environment.TickCount;
         }
 
         private void MouseHook_OnMouseEventUp(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             ProcessMouseEvent(MouseEventType.MouseUp, e);
+            KeyDown = false;
+            lastTimeRecorded = Environment.TickCount;
         }
 
         private void MouseHook_OnMouseEventDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-           
+            if (KeyDown)
+            {
+                return;
+            }
+
+
             ProcessMouseEvent(MouseEventType.MouseDown, e);
-          
+            lastTimeRecorded = Environment.TickCount;
+
+            KeyDown = true;
         }
 
         private void KeyBoardHook_EventDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
 
 
-            if (keyDown)
+            if (KeyDown && CheckBoxDelay.IsChecked.Value)
             {
                 return;
             }
          
 
             ProcessKeyboardEvent(KeyState.Keydown, e);
-             keyDown = true;
+             KeyDown = true;
             lastTimeRecorded = Environment.TickCount;
         
 
@@ -217,27 +228,21 @@ namespace MouseKeyPlayback
         {
 
             ProcessKeyboardEvent(KeyState.Keyup, e);
-            keyDown = false;
+            KeyDown = false;
             lastTimeRecorded = Environment.TickCount;
 
 
         }
 
-        private void MouseHook_OnMouseEvent(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-          
-            throw new NotImplementedException();
-        }
+   
 
         private void MouseHook_OnMouseWheelEvent(object sender, System.Windows.Forms.MouseEventArgs e)
         {
           ProcessMouseEvent(MouseEventType.MouseWheel, e);
+            lastTimeRecorded = Environment.TickCount;
+
         }
 
-        private void MouseHook_OnMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-          
-        }
 
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -510,10 +515,7 @@ StopMacro = true;
 
      private void CheckDelayActions(Record item)
         {
-            if(item.EventMouse != null)
-            {
-                return;
-            }
+         
             Record itemWaitNormal = new Record
             {
                 Id = count,
@@ -538,8 +540,8 @@ StopMacro = true;
                     AddRecordItem(itemWait);
                     AddRecordItem(item);
 
-                }
-                else if (ApplicationSettingsManager.Settings.ForeachKeys)
+                 }
+               else if (ApplicationSettingsManager.Settings.ForeachKeys)
                 {
                     AddRecordItem(item);
                     AddRecordItem(itemWait);
@@ -547,15 +549,34 @@ StopMacro = true;
 
             }
             else if (CheckBoxDelay.IsChecked.Value)
-            { 
-                    AddRecordItem(item);
-            } 
- 
-            
+            {
+                if (listView.Items.Count > 0)
+                {
+                    var lastItem = (Record)listView.Items[listView.Items.Count - 2];
+                    if (lastItem.Type == item.Type)
+                    {
+                        var lastAction = lastItem.EventMouse.Action;
+                        if (lastAction == MouseHook.MouseEventType.MouseMove
+                            && item.EventMouse.Action == lastAction)
+
+                            this.listView.Items.RemoveAt(this.listView.Items.Count - 1);
+                        item.Group = this.listView.Items.Count - 1;
+                    }
+                }
+                AddRecordItem(item);
                 AddRecordItem(itemWaitNormal);
-            
+            }
+            else
+            {
+                AddRecordItem(item);
+            }
+
+    
+
+
+
         }
-        
+
 
         private void LogKeyboardEvents(KeyboardEvent kEvent)
         {
@@ -638,30 +659,34 @@ StopMacro = true;
             // Check if two last records are similar
             if (listView.Items.Count > 0)
             {
-                var lastItem = (Record)listView.Items[listView.Items.Count - 1];
-                if (lastItem.Type == item.Type)
-                {
+               
                     switch (item.Type)
                     {
                         case Constants.MOUSE:
+                        var lastItem = (Record)listView.Items[listView.Items.Count - 1];
+                        if (lastItem.Type == item.Type)
+                        {
                             var lastAction = lastItem.EventMouse.Action;
                             if (lastAction == MouseHook.MouseEventType.MouseMove
                                 && item.EventMouse.Action == lastAction)
-                                
+
                                 this.listView.Items.RemoveAt(this.listView.Items.Count - 1);
                             item.Group = this.listView.Items.Count - 1;
+                        }
                             break;
                         case Constants.KEYBOARD:
                             break;
-                        case Constants.WAITRandom:
-                          
-                            break;
-                    }
+                       
+                        
+                    
                 }
             }
 
             // satisfy every condition
             this.listView.Items.Add(item);
+
+        
+            
         }
         #endregion
 
