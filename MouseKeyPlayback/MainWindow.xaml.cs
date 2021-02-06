@@ -38,7 +38,7 @@ namespace MouseKeyPlayback
         private KeyboardHook keyboardHook = new KeyboardHook();
         private KeyboardHook keyboardHookShots = new KeyboardHook();
         private MouseEventType lastKeyMouseButton { get; set; }
-        private KeyboardEvent lastKeyKeyboardButton { get; set; }
+        private KeyboardKeyControl lastKeyKeyboardButton { get; set; }
 
         private int lastTimeRecorded;
 
@@ -54,7 +54,7 @@ namespace MouseKeyPlayback
         private bool NeedExit { get; set; } = false;
         public List<Keys> KeyStopMacroCache { get; set; } = new List<Keys>();
         public List<Keys> KeyStopMacroStopKeys { get; set; } = new List<Keys>();
-     
+    public int KeyDownCount { get; set; }
 
         private System.Timers.Timer myTimer = new System.Timers.Timer(1000); //using System.Timers, 1000 means 1000 msec = 1 sec interval
         public InputSimulator simulator = new InputSimulator();
@@ -137,12 +137,8 @@ namespace MouseKeyPlayback
                 KeyStopMacroStopKeys.Add(itemb);
                 Debug.WriteLine("ITEMNONMODIFIER:" + itemb);
             }
-            KeyboardEvent kEvent = new KeyboardEvent
-            {
-                Key = Keys.None,
-                Action = KeyState.Keydown
-            };
-            lastKeyKeyboardButton = kEvent;
+          
+        //    lastKeyKeyboardButton = kEvent;
 
         }
         private void StopMacroKey()
@@ -195,27 +191,27 @@ namespace MouseKeyPlayback
 
         private void MouseHook_OnMouseEventDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
+           
             ProcessMouseEvent(MouseEventType.MouseDown, e);
+          
         }
 
         private void KeyBoardHook_EventDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-           if (lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action == KeyState.Keyup && lastKeyKeyboardButton.Key == e.KeyCode || lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action == KeyState.Keyup && lastKeyKeyboardButton.Key != e.KeyCode)
-            {
-                return;
-            }
-            ProcessKeyboardEvent(KeyState.Keydown, e);
-            lastTimeRecorded = Environment.TickCount;
 
+            
+       
+          
+         ProcessKeyboardEvent(KeyState.Keydown, e);
+          
+            lastTimeRecorded = Environment.TickCount;
+        
 
         }
 
         private void KeyBoardHook_EventUp(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            if (lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action == KeyState.Keydown && lastKeyKeyboardButton.Key == e.KeyCode || lastKeyKeyboardButton != null && lastKeyKeyboardButton.Action == KeyState.Keydown && lastKeyKeyboardButton.Key == e.KeyCode)
-            {
-                return;
-            }
+           
             ProcessKeyboardEvent(KeyState.Keyup, e);
             lastTimeRecorded = Environment.TickCount;
 
@@ -550,14 +546,7 @@ StopMacro = true;
                     AddRecordItem(item);
             } 
  
-            int index = recordList.IndexOf(item);
-            if (index - 2 > 0)
-            {
-                if (recordList[index - 2].EventKey != null)
-                {
-                    lastKeyKeyboardButton = recordList[index - 2].EventKey;          
-                }
-            }
+            
                 AddRecordItem(itemWaitNormal);
             
         }
