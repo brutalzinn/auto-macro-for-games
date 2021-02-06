@@ -54,7 +54,7 @@ namespace MouseKeyPlayback
         private bool NeedExit { get; set; } = false;
         public List<Keys> KeyStopMacroCache { get; set; } = new List<Keys>();
         public List<Keys> KeyStopMacroStopKeys { get; set; } = new List<Keys>();
-    public int KeyDownCount { get; set; }
+        public bool keyDown = false;
 
         private System.Timers.Timer myTimer = new System.Timers.Timer(1000); //using System.Timers, 1000 means 1000 msec = 1 sec interval
         public InputSimulator simulator = new InputSimulator();
@@ -199,11 +199,15 @@ namespace MouseKeyPlayback
         private void KeyBoardHook_EventDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
 
-            
-       
-          
-         ProcessKeyboardEvent(KeyState.Keydown, e);
-          
+
+            if (keyDown)
+            {
+                return;
+            }
+         
+
+            ProcessKeyboardEvent(KeyState.Keydown, e);
+             keyDown = true;
             lastTimeRecorded = Environment.TickCount;
         
 
@@ -211,8 +215,9 @@ namespace MouseKeyPlayback
 
         private void KeyBoardHook_EventUp(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-           
+
             ProcessKeyboardEvent(KeyState.Keyup, e);
+            keyDown = false;
             lastTimeRecorded = Environment.TickCount;
 
 
