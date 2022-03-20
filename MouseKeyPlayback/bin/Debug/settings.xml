@@ -3,17 +3,10 @@
   <minRamdomConfig>100</minRamdomConfig>
   <maxRamdomConfig>400</maxRamdomConfig>
   <DefaultTimer>0</DefaultTimer>
-  <BetweenKeys>true</BetweenKeys>
-  <ForeachKeys>false</ForeachKeys>
+  <BetweenKeys>false</BetweenKeys>
+  <ForeachKeys>true</ForeachKeys>
   <HotKeyStartRecord>Control + F1</HotKeyStartRecord>
   <HotKeyStopRecord>Control + F2</HotKeyStopRecord>
-  <HotKeyPlay>Control + J</HotKeyPlay>
-  <StopMacroControl>
-    <HotKeyStopModifiers>
-      <Keys>LControlKey</Keys>
-    </HotKeyStopModifiers>
-    <HotKeyStopKeys>
-      <Keys>L</Keys>
-    </HotKeyStopKeys>
-  </StopMacroControl>
+  <HotKeyPlay>Control + F3</HotKeyPlay>
+  <HotKeyStopMacro>Control + F4</HotKeyStopMacro>
 </AppSettings>

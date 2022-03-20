@@ -12,8 +12,8 @@ namespace MouseKeyPlayback.Views
 {
     public partial class KeyInfoHelper : Form
     {
-        List<Keys> modifierKeys;
-        List<Keys> nonModifierKeys;
+        public List<Keys> modifierKeys;
+        public List<Keys> nonModifierKeys;
         public string keysResult { get; set; }
     
         private void CloseWithResult(DialogResult result)
@@ -46,10 +46,7 @@ namespace MouseKeyPlayback.Views
                
             keysResult = string.IsNullOrEmpty(value1) ? value2 : string.IsNullOrEmpty(value2) ? value1 : (string.Join(" + ", value1, value2));
                 textBox1.Text = keysResult;
-
-
-
-                    }
+             }
         }
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)

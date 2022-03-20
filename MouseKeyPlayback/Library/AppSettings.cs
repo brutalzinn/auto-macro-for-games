@@ -89,13 +89,13 @@ namespace MouseKeyPlayback.Utils
         public int minRamdomConfig { get; set; }
         public int maxRamdomConfig { get; set; }
         public int DefaultTimer{ get; set; }
-       public bool BetweenKeys { get; set; }
+        public bool BetweenKeys { get; set; }
         public bool ForeachKeys { get; set; }
 
         public string HotKeyStartRecord { get; set; }
         public string HotKeyStopRecord { get; set; }
         public string HotKeyPlay { get; set; }
-       
-       public StopPlayMacro StopMacroControl { get; set; } = new StopPlayMacro();
+        public string HotKeyStopMacro { get; set; }
+
     }
 }

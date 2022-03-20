@@ -36,14 +36,13 @@ namespace MouseKeyPlayback.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-           ApplicationSettingsManager.Settings.minRamdomConfig = Convert.ToInt32(RandomMinConfig.Text);
+            ApplicationSettingsManager.Settings.minRamdomConfig = Convert.ToInt32(RandomMinConfig.Text);
             ApplicationSettingsManager.Settings.maxRamdomConfig = Convert.ToInt32(RandomMaxConfig.Text);
             ApplicationSettingsManager.Settings.DefaultTimer = Convert.ToInt32(TextBoxDefaultTimer.Text);
             ApplicationSettingsManager.Settings.ForeachKeys = CheckBoxRandomForeach.IsChecked.Value;
             ApplicationSettingsManager.Settings.BetweenKeys = CheckBoxRandomBetween.IsChecked.Value;
-           
             ApplicationSettingsManager.SaveSettings();
-             Globals.MainWindow.RegisterHotKeys();
+            Globals.MainWindow.RegisterHotKeys();
             
             this.Close();
         }
@@ -57,34 +56,48 @@ namespace MouseKeyPlayback.Views
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             KeyInfoHelper teste = new KeyInfoHelper();
-        teste.ShowDialog();
-            ApplicationSettingsManager.Settings.HotKeyStartRecord = teste.keysResult;
+            teste.textBox1.Text = ApplicationSettingsManager.Settings.HotKeyStartRecord;
+            teste.ShowDialog();
+            if (teste.DialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                ApplicationSettingsManager.Settings.HotKeyStartRecord = teste.keysResult;
 
-          
+            }
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             KeyInfoHelper teste = new KeyInfoHelper();
+            teste.textBox1.Text = ApplicationSettingsManager.Settings.HotKeyStopRecord;
             teste.ShowDialog();
-            ApplicationSettingsManager.Settings.HotKeyStopRecord = teste.keysResult;
+            if (teste.DialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                ApplicationSettingsManager.Settings.HotKeyStopRecord = teste.keysResult;
+            }
 
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
             KeyInfoHelper teste = new KeyInfoHelper();
+            teste.textBox1.Text = ApplicationSettingsManager.Settings.HotKeyPlay;
             teste.ShowDialog();
-            ApplicationSettingsManager.Settings.HotKeyPlay = teste.keysResult;
-
+            if (teste.DialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                ApplicationSettingsManager.Settings.HotKeyPlay = teste.keysResult;
+            }
         }
 
         private void HotKeyStopMacro(object sender, RoutedEventArgs e)
         {
-            KeyInfoHelperAdvaced teste = new KeyInfoHelperAdvaced();
+            KeyInfoHelper teste = new KeyInfoHelper();
+            teste.textBox1.Text = ApplicationSettingsManager.Settings.HotKeyStopMacro;
             teste.ShowDialog();
-         ApplicationSettingsManager.Settings.StopMacroControl.HotKeyStopKeys = teste.nonModifierKeys;
-            ApplicationSettingsManager.Settings.StopMacroControl.HotKeyStopModifiers = teste.modifierKeys;
+            if(teste.DialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                ApplicationSettingsManager.Settings.HotKeyStopMacro = teste.keysResult;
+            }
+
         }
     }
 }

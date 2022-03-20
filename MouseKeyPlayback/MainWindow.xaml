@@ -160,8 +160,7 @@
                             x:Name="appPath"
                             Width="97"
                             Margin="10,22,0,61"
-                            HorizontalAlignment="Left"
-                            TextWrapping="Wrap" />
+                            TextWrapping="Wrap" Height="63" />
                         <Button
                             x:Name="btnOpenFile"
                             Width="28"
@@ -179,18 +178,24 @@
                     </StackPanel>
 
                     <Label
-                        Margin="0,120,60,-2"
+                        Margin="0,100,60,-2"
                         MouseDoubleClick="Label_MouseDoubleClick" Grid.Row="2" >
                         <CheckBox x:Name="CheckBoxDelay"  Content="Insert delay" Width="93" Height="18"/>
                     </Label>
 
                     <Label
-                        Margin="0,95,0,23"
+                        Margin="0,120,0,23"
                          HorizontalAlignment="Left"
                         MouseDoubleClick="Label_MouseDoubleClick" Grid.Row="1" >
                         <CheckBox x:Name="CheckBoxRandom" Content="Delay random" Width="106"/>
                     </Label>
 
+                    <Label
+                        Margin="0,140,0,23"
+                         HorizontalAlignment="Left"
+                        MouseDoubleClick="Label_MouseDoubleClick" Grid.Row="1" >
+                        <CheckBox x:Name="CheckLoop" Content="Infinite loop" Width="106"/>
+                    </Label>
 
                     <TextBox
                         x:Name="repeatTime"

@@ -52,8 +52,7 @@ namespace MouseKeyPlayback
 
         private volatile bool m_StopThread = false;
         private bool NeedExit { get; set; } = false;
-        public List<Keys> KeyStopMacroCache { get; set; } = new List<Keys>();
-        public List<Keys> KeyStopMacroStopKeys { get; set; } = new List<Keys>();
+       
         public bool KeyDown = false;
         public bool MouseDown = false;
 
@@ -110,6 +109,7 @@ namespace MouseKeyPlayback
             base.OnClosed(e);
             m_StopThread = true;
         }
+
         public void RegisterHotKeys()
         {
             if(ApplicationSettingsManager.Settings.HotKeyStartRecord != null)
@@ -124,22 +124,28 @@ namespace MouseKeyPlayback
             }
             if (ApplicationSettingsManager.Settings.HotKeyPlay != null)
             {
-                GlobalHotKey.RegisterHotKey(ApplicationSettingsManager.Settings.HotKeyPlay, Play);
+                GlobalHotKey.RegisterHotKey(ApplicationSettingsManager.Settings.HotKeyPlay, CheckMode);
 
             }
+            
+            if (ApplicationSettingsManager.Settings.HotKeyStopMacro != null)
+            {
+                GlobalHotKey.RegisterHotKey(ApplicationSettingsManager.Settings.HotKeyStopMacro, ()=> m_StopThread = true);
 
-            foreach(Keys item in ApplicationSettingsManager.Settings.StopMacroControl.HotKeyStopModifiers)
-            {
-                KeyStopMacroStopKeys.Add(item);
-                Debug.WriteLine("ITEMMODIFIER:" + item);
             }
-            foreach (Keys itemb in ApplicationSettingsManager.Settings.StopMacroControl.HotKeyStopKeys)
-            {
-                KeyStopMacroStopKeys.Add(itemb);
-                Debug.WriteLine("ITEMNONMODIFIER:" + itemb);
-            }
-          
-        //    lastKeyKeyboardButton = kEvent;
+           
+            //foreach(Keys item in ApplicationSettingsManager.Settings.StopMacroControl.HotKeyStopModifiers)
+            //{
+            //    KeyStopMacroStopKeys.Add(item);
+            //    Debug.WriteLine("ITEMMODIFIER:" + item);
+            //}
+            //foreach (Keys itemb in ApplicationSettingsManager.Settings.StopMacroControl.HotKeyStopKeys)
+            //{
+            //    KeyStopMacroStopKeys.Add(itemb);
+            //    Debug.WriteLine("ITEMNONMODIFIER:" + itemb);
+            //}
+
+            //    lastKeyKeyboardButton = kEvent;
 
         }
         private void StopMacroKey()
@@ -175,7 +181,7 @@ namespace MouseKeyPlayback
             //keyboardHookShots.OnKeyboardEvent += KeyboardHookShotups_OnKeyboardEvent;
             mouseHook.MouseDown += MouseHook_OnMouseEventDown;
             mouseHook.MouseUp += MouseHook_OnMouseEventUp;
-           mouseHook.MouseMove += MouseHook_OnMouseMoveMove;
+            mouseHook.MouseMove += MouseHook_OnMouseMoveMove;
             mouseHook.MouseWheel += MouseHook_OnMouseWheelEvent;
             
         }
@@ -294,16 +300,7 @@ namespace MouseKeyPlayback
                 Key = (Keys)key,
                 Action = keyState
             };
-
-KeyStopMacroCache.Add(kEvent.Key);
-
-            if (ContainsSubsequence(KeyStopMacroCache, KeyStopMacroStopKeys))
-            {
-                
-                Debug.WriteLine("Stop macro called");
-StopMacro = true;
-            }
-         
+    
         
             sw.Stop();
             Console.WriteLine("Time for macro keyboard taken: {0}ms", sw.Elapsed.TotalMilliseconds);
@@ -392,7 +389,8 @@ StopMacro = true;
 
         private void TrackAutomationElement(Record item)
         {
-            if (item.Type == Constants.MOUSE
+
+            if (item != null && item.Type == Constants.MOUSE
                 && item.EventMouse.Action == MouseHook.MouseEventType.MouseUp)
             {
                 var windowTitle = Win32Utils.GetActiveWindowTitle();
@@ -526,14 +524,18 @@ StopMacro = true;
 
             if (CheckBoxRandom.IsChecked.Value)
             {
+                int max = ApplicationSettingsManager.Settings.maxRamdomConfig;
+                int min = ApplicationSettingsManager.Settings.minRamdomConfig;
+                int randomms = new Random().Next(min, max);
                 Record itemWait = new Record
                 {
                     Id = count,
 
-                    WaitMaxMs = ApplicationSettingsManager.Settings.maxRamdomConfig,
-                    WaitMinMs = ApplicationSettingsManager.Settings.minRamdomConfig,
+                    WaitMaxMs =  max,
+                    WaitMinMs = min,
+                    WaitMs = randomms,
                     Type = Constants.WAITRandom,
-                    Content = $"Wait {ApplicationSettingsManager.Settings.maxRamdomConfig} MAX Random ms. \n Wait {ApplicationSettingsManager.Settings.minRamdomConfig} Min Random ms "
+                    Content = $"Wait {randomms} Random ms "
                 };
                 if (ApplicationSettingsManager.Settings.BetweenKeys)
                 {
@@ -691,10 +693,65 @@ StopMacro = true;
         #endregion
 
         #region Playback
+
+        private void CheckMode()
+        {
+            m_StopThread = false;
+            Thread thread = null;
+            if (CheckLoop.IsChecked.Value)
+            {
+                 thread = new Thread(new ThreadStart(delegate ()
+                {
+                    while (!m_StopThread)
+                    {
+                        PlayLoop();
+                    }
+                }));
+            }
+            else
+            {
+                thread = new Thread(new ThreadStart(delegate ()
+                {
+                        Play(); 
+                }));
+            }
+            thread.Start();
+        }
+        private void PlayLoop()
+        {
+            int num;
+            Stopwatch sw = Stopwatch.StartNew();
+            foreach (var record in recordList)
+            {
+                if (m_StopThread)
+                {
+                    break;
+                }
+                switch (record.Type)
+                {
+                    case Constants.MOUSE:
+                        PlaybackMouse(record);
+                        break;
+                    case Constants.KEYBOARD:
+                        PlaybackKeyboard(record);
+                        break;
+                    case Constants.WAIT:
+                        Thread.Sleep(record.WaitMs);
+                        break;
+
+                    case Constants.WAITRandom:
+                        Random number = new Random();
+                        Thread.Sleep(number.Next(record.WaitMinMs, record.WaitMaxMs));
+                        break;
+                    default:
+                        break;
+                }
+                Thread.Sleep(1);
+
+            }
+        }
         private void Play()
         {
-            StopMacro = false;
-            KeyStopMacroCache.Clear();
             recordCacheList = new List<Record>();
             simulator = new InputSimulator();
          //   Parallel.Invoke(() => keyboardHookShots.Start());
@@ -705,11 +762,15 @@ StopMacro = true;
 
             int num;
             Stopwatch sw = Stopwatch.StartNew();
-
+            
             if (int.TryParse(repeatTime.Text, out num))
             {
                 for (int i = 0; i < num; ++i)
                 {
+                    if (m_StopThread)
+                    {
+                        break;
+                    }
                     LaunchApp();
                   
                     foreach (var record in recordList)
@@ -736,20 +797,11 @@ StopMacro = true;
                             default:
                                 break;
                         }
-                     if (StopMacro)
-                        {
-                            break;
-                        }
-                        if (KeyStopMacroStopKeys.Count * 0.5 > sw.Elapsed.TotalMilliseconds)
-                        {
-                            Debug.WriteLine("Clear all keyboards cached keys" + sw.Elapsed.TotalMilliseconds);
-                            KeyStopMacroCache.Clear();
-                        }
-                        Thread.Sleep(4);
-                       
+              
+                                     
                     }
 
-                    Thread.Sleep(10);
+                    Thread.Sleep(500);
                 }
 
             }
@@ -1328,7 +1380,9 @@ Move(-1);
         private void OpenConfig(object sender, RoutedEventArgs e)
         {
             ConfigPage Window = new ConfigPage();
+            GlobalHotKey.Dispose();
             Window.ShowDialog();
+            RegisterHotKeys();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

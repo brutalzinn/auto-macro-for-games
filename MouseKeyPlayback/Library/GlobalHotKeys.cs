@@ -12,7 +12,7 @@ namespace MouseKeyPlayback.Library
     using System.Threading;
     using System.Windows.Input;
 
-    public class GlobalHotKey : IDisposable
+    public class GlobalHotKey 
     {
         /// <summary>
         /// Registers a global hotkey
@@ -22,9 +22,17 @@ namespace MouseKeyPlayback.Library
         /// <returns>true, if registration succeeded, otherwise false</returns>
         public static bool RegisterHotKey(string aKeyGestureString, Action aAction)
         {
-            var c = new KeyGestureConverter();
-            KeyGesture aKeyGesture = (KeyGesture)c.ConvertFrom(aKeyGestureString);
-            return RegisterHotKey(aKeyGesture.Modifiers, aKeyGesture.Key, aAction);
+            try
+            {
+                var c = new KeyGestureConverter();
+                KeyGesture aKeyGesture = (KeyGesture)c.ConvertFrom(aKeyGestureString);
+                return RegisterHotKey(aKeyGesture.Modifiers, aKeyGesture.Key, aAction);
+            }
+            catch
+            {
+                return false;
+            }
+            
         }
 
         public static bool RegisterHotKey(ModifierKeys aModifier, Key aKey, Action aAction)
@@ -50,7 +58,7 @@ namespace MouseKeyPlayback.Library
             }
             return aRegistered;
         }
-        public void Unregister(string aKeyGestureString, Action aAction)
+        public void Unregister(string aKeyGestureString)
         {
             var c = new KeyGestureConverter();
             KeyGesture aKeyGesture = (KeyGesture)c.ConvertFrom(aKeyGestureString);
@@ -59,7 +67,7 @@ namespace MouseKeyPlayback.Library
 
             UnregisterHotKey(window.Handle, unregister.Id);
         }
-        public void Dispose()
+        public static void Dispose()
         {
             // unregister all the registered hot keys.
             for (int i = currentID; i > 0; i--)
